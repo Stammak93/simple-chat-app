@@ -1,0 +1,16 @@
+{
+  "name": "simple-chat-app",
+  "version": "1.0.0",
+  "description": "A simple chat application with React",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "nodemon server/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}

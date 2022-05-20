@@ -1,9 +1,11 @@
-import './App.css';
+import React from "react";
+import WelcomeScreen from "./components/WelcomeScreen";
+import "./components/WelcomeScreen.css";
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      Hello
+    <div className="app">
+      <WelcomeScreen />
     </div>
   );
 }

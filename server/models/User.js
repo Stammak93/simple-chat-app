@@ -1,8 +1,9 @@
 const mongoose = require("mongoose");
 
-const UserSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
     googleId: String,
-    userName: String
+    userName: String,
+    userIsOnline: Boolean
 })
 
-mongoose.model("users", UserSchema);
+mongoose.model("chatUsers", userSchema);

@@ -3,9 +3,9 @@ const mongoose = require("mongoose");
 const passport = require("passport");
 const cookieSession = require("cookie-session");
 const keys = require("./config/dev");
-require("./services/passport");
 require("./models/ChatRoom");
 require("./models/User");
+require("./services/passport");
 
 
 mongoose.connect(keys.mongoURI);
@@ -27,6 +27,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // add routes here with require(something)(app)
+require("./routes/authRoutes")(app);
+require("./routes/userRoutes")(app);
 
 
 if(process.env.NODE_ENV === "production") {
@@ -41,6 +43,6 @@ if(process.env.NODE_ENV === "production") {
 
 
 
-const PORT = process.env.NODE_ENV || 5000;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT);
 //server.listen(PORT);

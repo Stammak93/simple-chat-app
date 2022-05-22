@@ -1,6 +1,7 @@
 import React from "react";
 import WelcomeScreen from "./components/WelcomeScreen";
 import "./components/WelcomeScreen.css";
+import "./components/MainChat.css";
 
 const App = () => {
   return (

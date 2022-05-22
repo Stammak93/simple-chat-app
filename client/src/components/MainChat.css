@@ -1,0 +1,129 @@
+
+
+.main-chat {
+    display: flex;
+    flex-direction: column;
+    width: 75%;
+    height: 75%;
+    min-height: 20em;
+    min-width: 41em;
+    background-color: #ffffffcc;
+    border-radius: 0.5em;
+    box-shadow: 0em 0.1em 0.1em #808080;
+}
+
+.top-div-for-header {
+    width: 100%;
+    min-width: 40em;
+    min-height: 3.5em;
+    background-color: #808080;
+    border-radius: 0.5em 0.5em 0em 0em;
+    border-bottom: 0.1em solid black;
+}
+
+.header {
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-logout {
+    display: flex;
+    justify-content: flex-end;
+    width: 7%;
+    min-width: 5em;
+    height: 100%;
+    border-radius: 1em;
+}
+
+.header-logout__btn {
+    width: 8em;
+    height: 100%;
+    font-size: 1.1em;
+    background-color: #808080;
+    color: white;
+    border: 0.1em solid #808080;
+    border-radius: 1em;
+}
+
+.header-logout__btn:hover {
+    color: pink;
+    cursor: pointer;
+}
+
+
+
+.div-for-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 100%;
+    border-radius: 0em 0em 0.5em 0.5em;
+}
+
+.user-list {
+    min-width: 10em;
+    height: 100%;
+    border-radius: 0em 0em 0.5em 0em;
+    resize: horizontal;
+    flex-basis: 14%;
+    border-left: 0.1em solid #808080;
+}
+
+.user-list__header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    text-align: center;
+    width: 100%;
+    min-height: 2em;
+    height: 4%;
+    box-shadow: 0em 0.1em 0.1em #808080;
+}
+
+.user-list__content {
+    display: flex;
+}
+
+.chat-room {
+    min-width: 20em;
+    height: 100%;
+    flex-basis: 72%;
+}
+
+.chat-room__header {
+    background-color: white;
+    width: 100%;
+    height: 2em;
+    min-height: 2em;
+    height: 4%;
+    box-shadow: 0em 0.1em 0.1em #808080;
+}
+
+.chat-room-list {
+    min-width: 10em;
+    height: 100%;
+    border-radius: 0em 0em 0em 0.5em;
+    resize: horizontal;
+    flex-basis: 14%;
+    border-right: 0.1em solid #808080;
+}
+
+.chat-room-list__header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    text-align: center;
+    width: 100%;
+    min-height: 2em;
+    height: 4%;
+    border-right: 0.1em solid #808080;
+    box-shadow: 0em 0.1em 0.1em #808080;
+}
+
+.chat-room-list__content {
+    display: flex;
+}

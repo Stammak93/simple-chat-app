@@ -5,7 +5,7 @@ const usernameGenerator = require("../user-utility/username-generator");
 const words = require("../user-utility/words-store");
 const keys = require("../config/dev");
 
-const User = mongoose.model("users");
+const User = mongoose.model("chatUsers");
 
 
 passport.serializeUser((user,done) => {
@@ -23,7 +23,7 @@ passport.deserializeUser( async (id, done) => {
 
 passport.use(
     new GoogleStrategy({
-        clientId: keys.googleClientID,
+        clientID: keys.googleClientID,
         clientSecret: keys.googleClientSecret,
         callbackURL: "/auth/google/callback",
         proxy: true
@@ -41,7 +41,8 @@ passport.use(
 
             const userCreated = await User({ 
                 googleId: profile.id, 
-                userName: randomUserName
+                userName: randomUserName,
+                userIsOnline: true
             }).save()
 
             return done(null, userCreated)

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { SocketContext, socket } from "../context/socket";
 import axios from "axios";
 import ChatRoom from "./chat-comps/ChatRoom";
 //import ChatRoomList from "./chat-comps/ChatRoomList";
 import FriendList from "./chat-comps/FriendList";
-import Header from "./chat-comps/Header";
-import BackgroundStyle from "./BackgroundStyle";
+//import Header from "./chat-comps/Header";
+// import BackgroundStyle from "./BackgroundStyle";
 
 
 
@@ -13,7 +14,6 @@ const MainChat = ({ updateLoggedIn }) => {
 
     const [friendList, setFriendList] = useState([]);
     const navigate = useNavigate();
-    const { id } = useParams();
 
 
     useEffect(() => {
@@ -50,17 +50,23 @@ const MainChat = ({ updateLoggedIn }) => {
     return (
         <div className="chat-page">
             <div className="main-chat rise">
-              <div className="top-div-for-header">
-                <Header updateLoggedIn={updateLoggedIn} friendList={friendList} updateFriendList={setFriendList}/>
-              </div>
               <div className="div-for-content">
-                <FriendList friendList={friendList}/>
-                <ChatRoom chatEndpoint={id}/>
+                <FriendList friendList={friendList} updateFriendList={setFriendList}/>
+                <SocketContext.Provider value={socket}>
+                  <ChatRoom />
+                </SocketContext.Provider>
               </div>
             </div>
-            <BackgroundStyle />
         </div>
     )
 }
 
 export default MainChat;
+
+/*               <div className="top-div-for-header">
+                <Header updateLoggedIn={updateLoggedIn}/>
+              </div> 
+              
+              
+              
+              <BackgroundStyle />*/

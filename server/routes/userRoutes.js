@@ -9,10 +9,10 @@ module.exports = (app) => {
         if(req.isAuthenticated()) {
             const userDetails = await User.findOne({ googleId: req.user.googleId }).lean()
 
-            if(userDetails.currentChat !== "") {
+            if(userDetails.currentChat) {
                 return res.status(200).send(userDetails.currentChat)
             }
-
+            
             return res.status(200).send("1")
         }
 

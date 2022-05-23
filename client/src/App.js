@@ -13,6 +13,7 @@ const App = () => {
       <Routes>
         <Route exact path="/" element={<WelcomeScreen />}/>
         <Route exact path="/chat/:id" element={<MainChat />}/>
+        <Route exact path="/chat" element={<MainChat />} />
         <Route exact path="/auth/google" />
       </Routes>
     </BrowserRouter>

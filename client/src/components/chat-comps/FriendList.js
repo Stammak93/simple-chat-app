@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import AddFriendModal from "./AddFriendModal";
 
 
-const FriendList = ({ friendList }) => {
+const FriendList = ({ friendList, updateFriendList }) => {
 
     const navigate = useNavigate();
+    const [addFriend, setAddFriend] = useState(false);
 
+    
     const clickToCreateChat = async (userName) => {
 
         const response = await axios.post("/api/createRoom", {
@@ -17,6 +20,7 @@ const FriendList = ({ friendList }) => {
             navigate(`/chat/${response.data.toString()}`)
         }
     }
+
 
     const renderFriendList = friendList.map((user,index) => {
 
@@ -31,10 +35,18 @@ const FriendList = ({ friendList }) => {
     
     return (
         <div className="user-list">
-          <div className="user-list__header">Friend List</div>
+          <div className="user-list__header">
+            <p>Friend List</p>
+          </div>
+          <div className="add-friend">
+            <button onClick={() => setAddFriend(true)} className="add-friend__btn">Add Friend</button>
+          </div>
           <div className="user-list__content">
             {renderFriendList.length > 0 ? renderFriendList : <p>No friends yet</p>}
           </div>
+          {addFriend ? <AddFriendModal friendList={friendList} 
+            setAddFriend={setAddFriend} 
+            updateFriendList={updateFriendList}/> : null}
         </div>
     )
 }

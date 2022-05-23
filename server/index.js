@@ -10,8 +10,8 @@ require("./services/passport");
 
 mongoose.connect(keys.mongoURI);
 const app = express();
-//const server = require("http").createServer(app);
-//require("./services/socket")(server);
+const server = require("http").createServer(app);
+require("./services/socket")(server);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -44,5 +44,5 @@ if(process.env.NODE_ENV === "production") {
 
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT);
-//server.listen(PORT);
+//app.listen(PORT);
+server.listen(PORT);

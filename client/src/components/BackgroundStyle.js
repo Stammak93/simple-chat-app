@@ -1,6 +1,6 @@
 import React from "react";
-import backgroundOne from "../images/backgrounds/backgroundOne.jpg";
-import wave from "../images/backgrounds/blob-haikei-two.svg";
+import backgroundOne from "../images/backgrounds/background-img.jpg";
+import wave from "../images/backgrounds/bg-waves.svg";
 
 
 const BackgroundStyle = () => {

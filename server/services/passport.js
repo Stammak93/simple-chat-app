@@ -42,7 +42,10 @@ passport.use(
             const userCreated = await User({ 
                 googleId: profile.id, 
                 userName: randomUserName,
-                userIsOnline: true
+                userIsOnline: true,
+                friendList: [],
+                currentChat: ""
+                
             }).save()
 
             return done(null, userCreated)

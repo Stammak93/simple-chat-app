@@ -29,6 +29,7 @@ app.use(passport.session());
 // add routes here with require(something)(app)
 require("./routes/authRoutes")(app);
 require("./routes/userRoutes")(app);
+require("./routes/roomRoutes")(app);
 
 
 if(process.env.NODE_ENV === "production") {
@@ -40,7 +41,6 @@ if(process.env.NODE_ENV === "production") {
         res.sendFile(path.resolve(__dirname, "client", "build", "index.html"))
     })
 }
-
 
 
 const PORT = process.env.PORT || 5000;

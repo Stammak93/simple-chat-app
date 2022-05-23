@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Login from "./welcome-comps/Login";
-import MainChat from "./MainChat";
 import BackgroundStyle from "./BackgroundStyle";
 
 
 const WelcomeScreen = () => {
 
     const [loggedIn, setLoggedIn] = useState(null);
+    const navigate = useNavigate();
 
 
     useEffect(() => {
@@ -19,6 +20,7 @@ const WelcomeScreen = () => {
           
                 if(response.status === 200) {
                     setLoggedIn(true)
+                    navigate(`/chat/${response.data}`)
                 }
             } catch {
                 setLoggedIn(false)
@@ -33,18 +35,8 @@ const WelcomeScreen = () => {
             clearTimeout(checkUserTimeoutId)
         }
 
-    },[])
+    },[navigate])
     
-    
-    if(loggedIn) {
-        
-        return (
-            <div className="welcome-page">
-              <BackgroundStyle />
-              <MainChat updateLoggedIn={setLoggedIn}/>
-            </div>
-        )
-    }
     
     if(loggedIn === false) {
         return (

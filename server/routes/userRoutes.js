@@ -47,15 +47,12 @@ module.exports = (app) => {
 
             if(data) {
 
-                // I will try first by checking the state of the friendList on the client side 
-                /*const userExists = await User.findOne({ googleId: req.user.googleId, 
-                    friendList: { googleId: data.googleId }}).lean()
+                let friendObj = {
+                    userName: data.userName,
+                    userIsOnline: data.userIsOnline
+                }
 
-                if(userExists) {
-                    return res.status(304).send("User already in friend list.")
-                }*/
-
-                const newFriendList = await User.findOneAndUpdate({ googleId: req.user.googleId}, { $push: { friendList: data }}, {
+                const newFriendList = await User.findOneAndUpdate({ googleId: req.user.googleId}, { $push: { friendList: friendObj }}, {
                     new: true
                 })
 

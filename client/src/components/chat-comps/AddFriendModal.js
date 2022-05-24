@@ -8,7 +8,6 @@ const AddFriendModal = ({ friendList, setAddFriend, updateFriendList }) => {
     const [friendToAdd, setFriendToAdd] = useState("");
 
 
-
     const userAddClick = async () => {
 
         let friendExists = 0
@@ -57,8 +56,8 @@ const AddFriendModal = ({ friendList, setAddFriend, updateFriendList }) => {
             </div>
             <div className="add-friend__modal-input">
                 <input onChange={(e) => setFriendToAdd(e.target.value)} 
-                type="text" 
-                value={friendToAdd}
+                    type="text" 
+                    value={friendToAdd}
                 >
                 </input>
             </div>

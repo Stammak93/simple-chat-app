@@ -17,7 +17,7 @@ const FriendList = ({ friendList, updateFriendList }) => {
         })
 
         if(response.status === 200 || response.status === 201 ) {
-            navigate(`/chat/${response.data.toString()}`)
+            navigate(`/chat/${response.data}`)
         }
     }
 

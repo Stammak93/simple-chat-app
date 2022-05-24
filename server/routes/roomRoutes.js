@@ -13,11 +13,17 @@ module.exports = (app) => {
 
             let document = await User.findOne({ userName: req.body.params.userName }).lean()
             let roomId = `${req.user.googleId}i${document.googleId}`
+            let roomIdTwo = `${document.googleId}i${req.user.googleId}`
 
             const data = await ChatRoom.findOne({ roomId: roomId }).lean()
+            const dataTwo = await ChatRoom.findOne({ roomId: roomIdTwo }).lean()
 
             if(data) {
                 return res.status(200).send(roomId)
+            }
+
+            if(dataTwo) {
+                return res.status(200).send(roomIdTwo)
             }
             
             let roomUsers = []

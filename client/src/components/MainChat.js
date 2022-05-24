@@ -3,14 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { SocketContext, socket } from "../context/socket";
 import axios from "axios";
 import ChatRoom from "./chat-comps/ChatRoom";
-//import ChatRoomList from "./chat-comps/ChatRoomList";
 import FriendList from "./chat-comps/FriendList";
-//import Header from "./chat-comps/Header";
 // import BackgroundStyle from "./BackgroundStyle";
 
 
 
-const MainChat = ({ updateLoggedIn }) => {
+const MainChat = () => {
 
     const [friendList, setFriendList] = useState([]);
     const navigate = useNavigate();
@@ -62,11 +60,3 @@ const MainChat = ({ updateLoggedIn }) => {
 }
 
 export default MainChat;
-
-/*               <div className="top-div-for-header">
-                <Header updateLoggedIn={updateLoggedIn}/>
-              </div> 
-              
-              
-              
-              <BackgroundStyle />*/

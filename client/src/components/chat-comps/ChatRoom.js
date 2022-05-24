@@ -1,10 +1,9 @@
-import React, { useEffect, useState, useContext, useCallback } from "react";
+import React, { useEffect, useState, useContext, useCallback, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { SocketContext } from "../../context/socket";
 import axios from "axios";
 
-// use moment js and get moment().valueOf() timestamp on message sent
-// then on render do moment(parseInt(message.timestamp))
+
 const ChatRoom = () => {
 
     const [chatRoomDetails, setChatRoomDetails] = useState([]);
@@ -13,6 +12,7 @@ const ChatRoom = () => {
     const navigate = useNavigate()
     const socket = useContext(SocketContext);
     const { id } = useParams();
+    const ref = useRef();
 
 
     useEffect(() => {
@@ -38,8 +38,11 @@ const ChatRoom = () => {
             }
         }
 
+
         const getChatRoomTimeoutId = setTimeout(() => {
+            
             getChatRoom()
+        
         },700)
 
         return () => {
@@ -49,8 +52,20 @@ const ChatRoom = () => {
     },[id, navigate, socket])
 
 
+    useEffect(() => {
+
+        if(chatRoomDetails.length > 10) {
+            ref.current.lastChild.scrollIntoView();
+        }
+    })
+
+
     // handle user sending message
     const handleSentMessage = useCallback(async(message) => {
+
+        if(message.length < 1) {
+            return;
+        }
 
         const timestamp = Math.floor(Date.now()/1000)
         const messageObj = {
@@ -74,6 +89,7 @@ const ChatRoom = () => {
 
         setChatRoomDetails([...chatRoomDetails, messageObj])
         setMessage("")
+        ref.current.lastChild.scrollIntoView();
         
     },[chatRoomDetails])
 
@@ -144,7 +160,7 @@ const ChatRoom = () => {
               <button className="header-logout__btn" onClick={() => logoutClick()}>Logout</button>
             </div>
           </div>
-          <div className="chat-room__content">
+          <div ref={ref} className="chat-room__content">
             {renderChatRoom.length > 0 ? renderChatRoom : <p>No info yet</p>}
           </div>
           <div className="message-enablers">

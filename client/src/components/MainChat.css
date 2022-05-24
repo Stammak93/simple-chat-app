@@ -34,6 +34,7 @@
     color: #363636;
     border: 0.1em solid #808080;
     border-radius: 0em 0em 0em 1em;
+    font-family: 'Dosis', sans-serif;
 }
 
 .header-logout__btn:hover {
@@ -61,13 +62,13 @@
 .pending-list-toggle__btn {
     width: 100%;
     height: 4em;
-    background-color: #ffffff;
+    background-color: #46b7c6;
     border: 0.1em solid #363636;
 }
 
 .pending-list-toggle__btn:hover {
     cursor: pointer;
-    background-color: #b1b1b1;
+    background-color: #86effd;
 }
 
 .pending-friend-list {
@@ -76,6 +77,10 @@
     background-color: white;
     width: 100%;
     height: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #46b7c6 #363636; 
 }
 
 .pending-item {
@@ -158,6 +163,7 @@
     color: #363636;
     border: 0.1em solid #808080;
     border-radius: 0.2em;
+    font-family: 'Dosis', sans-serif;
 }
 
 .add-friend button:hover {
@@ -176,7 +182,7 @@
 }
 
 .user-item:hover {
-    background-color: #86effd;
+    background-color: #b1b1b1;
     cursor: pointer;
 }
 
@@ -199,16 +205,20 @@
     font-size: 1.05em;
 }
 
+.friend-details {
+    text-decoration: underline;
+    margin-left: 0.5em;
+}
+
 .chat-room__content {
     width: 100%;
     overflow-y: auto;
     overflow-x: hidden;
-    ;
     scrollbar-width: thin;
     scrollbar-color: #46b7c6 #363636; 
     display: flex;
     flex-direction: column;
-    height: calc(100% - 14%);
+    height: calc(100% - 17%);
 }
 
 .chat-room__content .message-right {
@@ -258,7 +268,7 @@
 .message-input {
     width: 40%;
     max-width: 50%;
-    height: 2.9em;
+    height: 3.2em;
     font-size: 1.2em;
     border-radius: 0.5em;
     box-shadow: 0em 0.1em 0.1em #808080;
@@ -270,7 +280,7 @@
 .message-input:focus {
     outline: none;
     border: 0.2em solid #808080;
-    height: 5em;
+    height: 3em;
 }
 
 .message-btn {
@@ -279,9 +289,10 @@
     height: 3.2em;
     background-color: #46b7c6;
     color: #363636;
-    font-size: 1.1em;
+    font-size: 1.2em;
     border-radius: 0.5em;
     border: 0.1em solid #808080;
+    font-family: 'Dosis', sans-serif;
 }
 
 .message-btn:hover {

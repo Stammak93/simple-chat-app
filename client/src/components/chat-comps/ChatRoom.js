@@ -23,7 +23,7 @@ const ChatRoom = ({ you, setYou }) => {
                 return navigate("/chat/1")
             }
 
-            if(id.length < 5) {
+            if(id.length < 8) {
                 return console.log("not a room")
             } 
 
@@ -33,7 +33,6 @@ const ChatRoom = ({ you, setYou }) => {
 
             if(response.status === 200) {
                 setChatRoomDetails(response.data.room)
-                //setYou(response.data.you)
                 setFriend(response.data.friend)
                 socket.emit("REQUEST_JOIN", (id))
             }
@@ -125,7 +124,6 @@ const ChatRoom = ({ you, setYou }) => {
     }
 
 
-    
     const renderChatRoom = chatRoomDetails.map((details,index) => {
 
         if(details) {
@@ -158,7 +156,7 @@ const ChatRoom = ({ you, setYou }) => {
         <div className="chat-room">
           <div className="chat-room__header">
             <div>
-              <p className="friend-details">Talking to...</p>
+              <p className="friend-details">{friend}</p>
             </div>
             <div className="header-logout">
               <button className="header-logout__btn" onClick={() => logoutClick()}>Logout</button>

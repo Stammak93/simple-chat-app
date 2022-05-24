@@ -20,7 +20,6 @@ const FriendList = ({ friendList, updateFriendList, pendingFriends, updatePendin
         if(response.status === 200 || response.status === 201 ) {
 
             let updatedNotifications = notification.filter(notif => notif !== userName)
-            console.log(updatedNotifications)
             setNotification(updatedNotifications)
             navigate(`/chat/${response.data}`)
         }

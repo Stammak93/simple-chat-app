@@ -4,8 +4,6 @@ import { SocketContext, socket } from "../context/socket";
 import axios from "axios";
 import ChatRoom from "./chat-comps/ChatRoom";
 import FriendList from "./chat-comps/FriendList";
-// import BackgroundStyle from "./BackgroundStyle";
-
 
 
 const MainChat = () => {
@@ -26,7 +24,7 @@ const MainChat = () => {
                 const response = await axios.get("/api/friendlist")
 
                 if(response.status === 200) {
-                    console.log(response.data)
+
                     setFriendList(response.data.friends)
                     setPendingFriends(response.data.pending)
                     setYou(response.data.you)

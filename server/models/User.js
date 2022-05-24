@@ -5,7 +5,8 @@ const userSchema = new mongoose.Schema({
     userName: String,
     userIsOnline: Boolean,
     friendList: Array,
-    currentChat: String
+    currentChat: String,
+    pendingFriends: Array
 })
 
 mongoose.model("chatUsers", userSchema);

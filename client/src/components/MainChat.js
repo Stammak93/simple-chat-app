@@ -11,12 +11,12 @@ import FriendList from "./chat-comps/FriendList";
 const MainChat = () => {
 
     const [friendList, setFriendList] = useState([]);
+    const [pendingFriends, setPendingFriends] = useState([]);
     const navigate = useNavigate();
 
 
     useEffect(() => {
         
-        console.log("calling to get rooms")
         
         const getFriendList = async () => {
 
@@ -24,7 +24,8 @@ const MainChat = () => {
                 const response = await axios.get("/api/friendlist")
 
                 if(response.status === 200) {
-                    setFriendList(Object.values(response.data.friendList))
+                    setFriendList(response.data.friendList)
+                    setPendingFriends(response.data.pendingFriends)
                 }
             
             } catch {
@@ -49,7 +50,12 @@ const MainChat = () => {
         <div className="chat-page">
             <div className="main-chat rise">
               <div className="div-for-content">
-                <FriendList friendList={friendList} updateFriendList={setFriendList}/>
+                <FriendList 
+                  friendList={friendList} 
+                  updateFriendList={setFriendList}
+                  pendingFriends={pendingFriends}
+                  updatePendingFriends={setPendingFriends}
+                />
                 <SocketContext.Provider value={socket}>
                   <ChatRoom />
                 </SocketContext.Provider>

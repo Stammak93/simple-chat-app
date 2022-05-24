@@ -42,23 +42,60 @@ module.exports = (app) => {
             if(req.user.userName === req.body.params.userName) {
                 return res.status(400).send("You cannot add yourself as a friend.")
             }
-
+            // check user exists
             const data = await User.findOne({ userName: req.body.params.userName }).lean()
 
             if(data) {
 
-                let friendObj = {
-                    userName: data.userName,
-                    userIsOnline: data.userIsOnline
-                }
-
-                const newFriendList = await User.findOneAndUpdate({ googleId: req.user.googleId}, { $push: { friendList: friendObj }}, {
-                    new: true
+                // check if user in friend list
+                const checkFriend = await User.findOne({ googleId: req.user.googleId, friendList: req.body.params.userName }).lean()
+                
+                // check if user in pending list of other user
+                let checkPending = false
+                
+                data.pendingFriends.forEach(pending => {
+                    if(pending === req.user.userName) {
+                        checkPending = true
+                    }
                 })
 
-                return res.status(201).send(newFriendList.friendList)
+                if(checkPending) {
+                    return res.status(304).send("Request already sent.")
+                }
+
+                if(!checkFriend) {
+                    await User.updateOne({ userName: req.body.params.userName}, { $push: { pendingFriends: req.user.userName }})
+                    return res.status(201).send("Friend Request Sent.")
+                }
+
+                return res.status(304).send("User already a friend.")
+
             }
         }
+
+        return res.status(403).send("Unauthorised Access")
+    })
+
+    app.post("/api/acceptFriend", async (req,res) => {
+
+        if(req.isAuthenticated()) {
+            
+            if(req.body.params.willAccept) {
+
+                const data = await User.updateOne({ googleId: req.user.googleId }, { $pull: { pendingFriends: req.body.params.userName }, 
+                    $push: { friendList: req.body.params.userName }}, { new: true })
+
+                await User.updateOne({ userName: req.body.params.userName }, { $push: { friendList: req.user.userName }})
+
+                return res.status(201).send(data)
+            }
+
+            const data = await User.findOneAndUpdate({ userName: req.user.userName }, { $pull: { pendingFriends: req.body.params.userName }}, { new: true })
+
+            return res.status(201).send(data)
+        }
+
+        return res.status(403).send("You shall not pass.")
     })
 
 
@@ -71,6 +108,6 @@ module.exports = (app) => {
             return res.redirect("/")
         }
         
-        return res.status(400).send("User is not logged in")
+        return res.status(403).send("User is not logged in")
     })
 }

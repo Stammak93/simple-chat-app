@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import axios from "axios";
 
 
-const AddFriendModal = ({ friendList, setAddFriend, updateFriendList }) => {
+const AddFriendModal = ({ friendList, setAddFriend }) => {
 
     const [friendToAdd, setFriendToAdd] = useState("");
 
@@ -13,7 +13,6 @@ const AddFriendModal = ({ friendList, setAddFriend, updateFriendList }) => {
         let friendExists = 0
         friendList.forEach((friend) => {
             if(friend.userName === friendToAdd) {
-                console.log("Already in friend list.")
                 friendExists += 1
             }
         })
@@ -24,7 +23,6 @@ const AddFriendModal = ({ friendList, setAddFriend, updateFriendList }) => {
         }
         
         if(!friendToAdd) {
-            setFriendToAdd("")
             return;
         }
     
@@ -35,7 +33,6 @@ const AddFriendModal = ({ friendList, setAddFriend, updateFriendList }) => {
             })
     
             if(response.status === 201) {
-                updateFriendList(Object.values(response.data))
                 setAddFriend(false)
                 friendToAdd("")
                 return;

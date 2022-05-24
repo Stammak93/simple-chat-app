@@ -48,13 +48,23 @@ module.exports = (app) => {
 
             if(req.user.googleId === req.query.roomId.split("i")[0] || req.user.googleId === req.query.roomId.split("i")[1]) {
 
-                let chatRoom = await ChatRoom.findOne({ roomId: req.query.roomId }).lean()
+                let otherUser;
+                const chatRoom = await ChatRoom.findOne({ roomId: req.query.roomId }).lean()
 
+                if(req.user.googleId === req.query.roomId.split("i")[0]) {
+                    otherUser = req.query.roomId.split("i")[1]
+                } else {
+                    otherUser = req.query.roomId.split("i")[0]
+                }
+
+                const friend = await User.findOne({ googleId: otherUser }).lean()
+                
                 if(chatRoom) {
 
                     return res.status(200).json({
                         you: req.user.userName,
-                        room: chatRoom
+                        room: chatRoom.messages,
+                        friend: friend.userName
                     })
                 }
 

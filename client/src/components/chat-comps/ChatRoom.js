@@ -4,11 +4,11 @@ import { SocketContext } from "../../context/socket";
 import axios from "axios";
 
 
-const ChatRoom = () => {
+const ChatRoom = ({ you, setYou }) => {
 
     const [chatRoomDetails, setChatRoomDetails] = useState([]);
-    const [you, setYou] = useState("");
     const [message, setMessage] = useState("");
+    const [friend, setFriend] = useState("");
     const navigate = useNavigate()
     const socket = useContext(SocketContext);
     const { id } = useParams();
@@ -32,8 +32,9 @@ const ChatRoom = () => {
             })
 
             if(response.status === 200) {
-                setChatRoomDetails(response.data.room.messages)
-                setYou(response.data.you)
+                setChatRoomDetails(response.data.room)
+                //setYou(response.data.you)
+                setFriend(response.data.friend)
                 socket.emit("REQUEST_JOIN", (id))
             }
         }
@@ -49,7 +50,7 @@ const ChatRoom = () => {
             clearTimeout(getChatRoomTimeoutId)
         }
     
-    },[id, navigate, socket])
+    },[id, navigate, socket, setYou])
 
 
     useEffect(() => {
@@ -79,14 +80,17 @@ const ChatRoom = () => {
         })
 
         if(response.status === 201) {
-            socket.emit("SEND_MESSAGE",({ id, messageObj }))
+            socket.emit("SEND_MESSAGE",({ id, friend, you, messageObj }))
+            setChatRoomDetails([...chatRoomDetails, messageObj])
+            setMessage("")
         }
 
-    },[id, socket, you])
+    },[id, socket, you, friend, chatRoomDetails])
 
 
     const handleReceivedMessage = useCallback(({ messageObj }) => {
 
+        console.log("received message")
         setChatRoomDetails([...chatRoomDetails, messageObj])
         setMessage("")
         ref.current.lastChild.scrollIntoView();
@@ -96,11 +100,11 @@ const ChatRoom = () => {
 
     useEffect(() => {
 
-        socket.on("RECEIVED_MESSAGE", handleReceivedMessage)
+        socket.on("RECEIVED_MESSAGE_IN_ROOM", handleReceivedMessage)
 
 
         return () => {
-            socket.off("RECEIVED_MESSAGE", handleReceivedMessage)
+            socket.off("RECEIVED_MESSAGE_IN_ROOM", handleReceivedMessage)
         }
 
     },[handleReceivedMessage, socket])

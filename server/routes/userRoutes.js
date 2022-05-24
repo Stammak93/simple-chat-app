@@ -26,7 +26,11 @@ module.exports = (app) => {
             const data = await User.findOne({ googleId: req.user.googleId }).lean()
 
             if(data) {
-                return res.status(200).send(data)
+                return res.status(200).json({
+                    friends: data.friendList,
+                    pending: data.pendingFriends,
+                    you: req.user.userName
+                })
             }
 
             return res.status(204).send("No conversations created yet")

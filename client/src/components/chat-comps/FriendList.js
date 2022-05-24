@@ -5,7 +5,7 @@ import AddFriendModal from "./AddFriendModal";
 import PendingButton from "./PendingButton";
 
 
-const FriendList = ({ friendList, updateFriendList, pendingFriends, updatePendingFriends }) => {
+const FriendList = ({ friendList, updateFriendList, pendingFriends, updatePendingFriends, notification, setNotification }) => {
 
     const navigate = useNavigate();
     const [addFriend, setAddFriend] = useState(false);
@@ -18,6 +18,10 @@ const FriendList = ({ friendList, updateFriendList, pendingFriends, updatePendin
         })
 
         if(response.status === 200 || response.status === 201 ) {
+
+            let updatedNotifications = notification.filter(notif => notif !== userName)
+            console.log(updatedNotifications)
+            setNotification(updatedNotifications)
             navigate(`/chat/${response.data}`)
         }
     }
@@ -28,6 +32,7 @@ const FriendList = ({ friendList, updateFriendList, pendingFriends, updatePendin
         return(
             <div onClick={() => clickToCreateChat(user)} className="user-item" key={index}>
               <p>{user}</p>
+              {notification.includes(user) ? <p>New message</p> : null}
             </div>
         )
     })

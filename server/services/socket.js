@@ -29,19 +29,26 @@ module.exports = (server) => {
 
             try {
                 if(io.sockets.adapter.rooms.get(id).size === 2) {
+                    
                     socket.broadcast.to(friend).emit("RECEIVED_MESSAGE_IN_ROOM", ({ messageObj }))
-                } else {
+                
+                } else if(io.sockets.adapter.rooms.get(friend)) {
+                    
                     let newSender = you
                     io.to(friend).emit("RECEIVED_MESSAGE_AWAY", ({ newSender }))
+                
+                } else {
+                    
+                    io.to(you).emit("RECEIVED_MESSAGE_OFFLINE")
                 }
+
             } catch {
                 console.log("An error has occured")
             }
         })
 
         socket.on("FRIEND_REQUEST_SENT", ({ friendToAdd, requestSender }) => {
-            console.log(friendToAdd)
-            console.log(requestSender)
+
             io.to(friendToAdd).emit("FRIEND_REQUEST_RECEIVED", (requestSender))
         })
 

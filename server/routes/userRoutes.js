@@ -95,12 +95,23 @@ module.exports = (app) => {
                 return res.status(201).send(data)
             }
 
-            const data = await User.findOneAndUpdate({ userName: req.user.userName }, { $pull: { pendingFriends: req.body.params.userName }}, { new: true })
+            const data = await User.findOneAndUpdate({ userName: req.user.userName }, 
+                { $pull: { pendingFriends: req.body.params.userName }}, { new: true })
 
             return res.status(201).send(data)
         }
 
         return res.status(403).send("You shall not pass.")
+    })
+
+    app.post("/api/updateNotifications", async (req,res) => {
+
+        if(req.isAuthenticated()) {
+
+            await User.updateOne({ userName: req.body.params.userName }, { $push: { notifications: req.user.userName }})
+            return res.status(201).send("User notified.")
+        }
+        return res.status(403).send("Unauthorised Access.")
     })
 
 

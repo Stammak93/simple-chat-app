@@ -4,7 +4,7 @@ import { SocketContext } from "../../context/socket";
 import axios from "axios";
 
 
-const ChatRoom = ({ you, setYou, setPageStatus }) => {
+const ChatRoom = ({ you, setYou, setPageStatus, notification }) => {
 
     const [chatRoomDetails, setChatRoomDetails] = useState([]);
     const [message, setMessage] = useState("");
@@ -24,9 +24,7 @@ const ChatRoom = ({ you, setYou, setPageStatus }) => {
             }
 
             if(id.length < 8) {
-                navigate("/chat/1")
-                setPageStatus(200)
-                return;
+                return navigate("/chat/1")
             } 
 
             const response = await axios.get("/api/chatroom", {
@@ -91,7 +89,6 @@ const ChatRoom = ({ you, setYou, setPageStatus }) => {
 
     const handleReceivedMessage = useCallback(({ messageObj }) => {
 
-        console.log("received message")
         setChatRoomDetails([...chatRoomDetails, messageObj])
         setMessage("")
         ref.current.lastChild.scrollIntoView();
@@ -99,16 +96,31 @@ const ChatRoom = ({ you, setYou, setPageStatus }) => {
     },[chatRoomDetails])
 
 
+    const handleOfflineMessage = useCallback( async () => {
+        
+        const response = axios.post("/api/updateNotifications", {
+            params: { userName: friend }
+        })
+
+        if(response.status === 201) {
+            console.log("notification sent.")
+        }
+        
+    },[friend])
+
+
     useEffect(() => {
 
         socket.on("RECEIVED_MESSAGE_IN_ROOM", handleReceivedMessage)
+        socket.on("RECEIVED_MESSAGE_OFFLINE", handleOfflineMessage)
 
 
         return () => {
             socket.off("RECEIVED_MESSAGE_IN_ROOM", handleReceivedMessage)
+            socket.off("RECEIVED_MESSAGE_OFFLINE", handleOfflineMessage)
         }
 
-    },[handleReceivedMessage, socket])
+    },[handleReceivedMessage, handleOfflineMessage, socket])
 
 
     const logoutClick = async () => {

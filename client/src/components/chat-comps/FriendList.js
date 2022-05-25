@@ -13,19 +13,26 @@ const FriendList = ({ friendList, updateFriendList, pendingFriends, updatePendin
     const socket = useContext(SocketContext);
 
     
-    const clickToCreateChat = async (userName) => {
+    const clickToCreateChat = useCallback(async (friendUserName) => {
+
+        let result = false
+
+        if(notification.length > 0) {
+            result = true
+        } 
 
         const response = await axios.post("/api/createRoom", {
-            params: { userName: userName }
+            params: { userName: friendUserName, updateNotifications: result }
         })
 
         if(response.status === 200 || response.status === 201 ) {
-
-            let updatedNotifications = notification.filter(notif => notif !== userName)
+            
+            let updatedNotifications = notification.filter(notif => notif !== friendUserName)
             setNotification(updatedNotifications)
             navigate(`/chat/${response.data}`)
         }
-    }
+
+    },[setNotification, navigate, notification])
 
 
     const renderFriendList = friendList.map((user,index) => {
@@ -40,7 +47,6 @@ const FriendList = ({ friendList, updateFriendList, pendingFriends, updatePendin
 
     
     const handleReceivedFriendRequest = useCallback((requestSender) => {
-        console.log("friend request received")
 
         updatePendingFriends([...pendingFriends, requestSender])
     

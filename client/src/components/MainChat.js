@@ -87,15 +87,20 @@ const MainChat = () => {
                   <div className="div-for-content">
                     <SocketContext.Provider value={socket}>
                         <FriendList 
-                        friendList={friendList} 
-                        updateFriendList={setFriendList}
-                        pendingFriends={pendingFriends}
-                        updatePendingFriends={setPendingFriends}
-                        notification={notification}
-                        setNotification={setNotification}
-                        you={you}
+                            friendList={friendList} 
+                            updateFriendList={setFriendList}
+                            pendingFriends={pendingFriends}
+                            updatePendingFriends={setPendingFriends}
+                            notification={notification}
+                            setNotification={setNotification}
+                            you={you}
                         />
-                        <ChatRoom you={you} setYou={setYou} setPageStatus={setPageStatus}/>
+                        <ChatRoom 
+                            you={you} 
+                            setYou={setYou} 
+                            setPageStatus={setPageStatus}
+                            notification={notification}
+                        />
                     </SocketContext.Provider>
                   </div>
                 </div>

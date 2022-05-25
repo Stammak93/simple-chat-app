@@ -11,7 +11,12 @@ module.exports = (app) => {
 
         if(req.isAuthenticated()) {
 
-            let document = await User.findOne({ userName: req.body.params.userName }).lean()
+            if(req.body.params.updateNotifications === true) {
+                await User.updateOne({ googleId: req.user.googleId }, 
+                    { $pull: { notifications: req.body.params.userName}})
+            }
+
+            document = await User.findOne({ userName: req.body.params.userName }).lean()
             let roomId = `${req.user.googleId}i${document.googleId}`
             let roomIdTwo = `${document.googleId}i${req.user.googleId}`
 
@@ -25,16 +30,8 @@ module.exports = (app) => {
             if(dataTwo) {
                 return res.status(200).send(roomIdTwo)
             }
-            
-            let roomUsers = []
 
-            if(req.body.params.userName === []) {
-                roomUsers.push(req.user.userName, ...req.body.params.userName)
-            } else {
-                roomUsers.push(req.user.userName, req.body.params.userName)
-            }
-
-            await new ChatRoom({roomId: roomId, users: roomUsers, messages: [] }).save()
+            await new ChatRoom({ roomId: roomId, messages: [] }).save()
 
             return res.status(201).send(roomId)
         }

@@ -12,6 +12,7 @@ const MainChat = () => {
     const [pendingFriends, setPendingFriends] = useState([]);
     const [notification, setNotification] = useState([]);
     const [you, setYou] = useState("");
+    const [pageStatus, setPageStatus] = useState(null);
     const navigate = useNavigate();
 
 
@@ -28,11 +29,13 @@ const MainChat = () => {
                     setFriendList(response.data.friends)
                     setPendingFriends(response.data.pending)
                     setYou(response.data.you)
+                    setNotification(response.data.notifications)
+                    setPageStatus(200)
                     socket.emit("IDENTIFY_SOCKET", (response.data.you))
                 }
             
             } catch {
-                navigate("/")
+                setPageStatus(404)
             }
         }
 
@@ -76,25 +79,38 @@ const MainChat = () => {
     })
 
 
+    if(pageStatus === 200) {
+        
+        return (
+            <div className="chat-page">
+                <div className="main-chat rise">
+                  <div className="div-for-content">
+                    <SocketContext.Provider value={socket}>
+                        <FriendList 
+                        friendList={friendList} 
+                        updateFriendList={setFriendList}
+                        pendingFriends={pendingFriends}
+                        updatePendingFriends={setPendingFriends}
+                        notification={notification}
+                        setNotification={setNotification}
+                        you={you}
+                        />
+                        <ChatRoom you={you} setYou={setYou} setPageStatus={setPageStatus}/>
+                    </SocketContext.Provider>
+                  </div>
+                </div>
+            </div>
+        )
+    }
+
+    if(pageStatus === 404) {
+        return (
+            <div>An error has occured.</div>
+        )
+    }
 
     return (
-        <div className="chat-page">
-            <div className="main-chat rise">
-              <div className="div-for-content">
-                <FriendList 
-                  friendList={friendList} 
-                  updateFriendList={setFriendList}
-                  pendingFriends={pendingFriends}
-                  updatePendingFriends={setPendingFriends}
-                  notification={notification}
-                  setNotification={setNotification}
-                />
-                <SocketContext.Provider value={socket}>
-                  <ChatRoom you={you} setYou={setYou}/>
-                </SocketContext.Provider>
-              </div>
-            </div>
-        </div>
+        <div>Please wait...</div>
     )
 }
 

@@ -5,7 +5,8 @@
     height: 100%;
     justify-content: center;
     align-items: center;
-    background-color: #363636;
+    z-index: 0;
+    background-color: transparent;
 }
 
 .main-chat {
@@ -16,6 +17,7 @@
     min-height: 20em;
     min-width: 41em;
     border-radius: 0.5em;
+    background-color: transparent;
 }
 
 .header-logout {
@@ -49,6 +51,7 @@
     justify-content: space-between;
     height: 100vh;
     border-radius: 0em 0em 0.5em 0.5em;
+    background-color: transparent;
 }
 
 
@@ -136,6 +139,7 @@
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: #46b7c6 #ffffff; 
+    background-color: #363636;
 }
 
 .user-list__header {
@@ -176,7 +180,8 @@
     justify-content: center;
     gap: 2em;
     font-size: 1.1em;
-    max-height: 3em;
+    height: auto;
+    max-height: 4em;
     background-color: #ffffff;
     width: 100%;
 }
@@ -190,6 +195,7 @@
     min-width: 20em;
     flex-basis: 86%;
     position: relative;
+    background-color: #363636;
 }
 
 .chat-room__header {
@@ -240,9 +246,9 @@
 .message-item {
     line-height: 1em;
     margin-right: 1em;
-    width: 15%;
-    min-width: 5em;
-    background-color: #46b7c6;
+    min-width: 10%;
+    width: auto;
+    background: linear-gradient(10deg, #46b7c6, #86effd,white 99%);
     border-radius: 1em 1em 1em 1em;
 }
 

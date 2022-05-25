@@ -1,8 +1,12 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useContext } from "react";
 import axios from "axios";
+import { SocketContext } from "../../context/socket";
 
 
-const AcceptRequest = ({ pendingFriends, updatePendingFriends, updateFriendList }) => {
+const AcceptRequest = ({ pendingFriends, updatePendingFriends, updateFriendList, you }) => {
+
+
+    const socket = useContext(SocketContext);
 
 
     const handleAcceptClick = useCallback(async (userName) => {
@@ -16,13 +20,15 @@ const AcceptRequest = ({ pendingFriends, updatePendingFriends, updateFriendList 
             if(response.data.pendingFriends === undefined || response.data.pendingFriends === null) {
                 updatePendingFriends([])
                 updateFriendList(response.data.friendList)
+                socket.emit("FRIEND_REQUEST_ACCEPTED", ({ userName, you }))
             } else {
                 updatePendingFriends(response.data.pendingFriends)
                 updateFriendList(response.data.friendList)
+                socket.emit("FRIEND_REQUEST_ACCEPTED", ({ userName, you }))
             }
         }
 
-    },[updateFriendList, updatePendingFriends])
+    },[updateFriendList, updatePendingFriends, socket, you])
 
 
     const handleDeclineClick = useCallback(async (userName) => {

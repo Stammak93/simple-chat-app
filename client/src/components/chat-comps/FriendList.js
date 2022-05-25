@@ -1,14 +1,16 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { SocketContext } from "../../context/socket";
 import AddFriendModal from "./AddFriendModal";
 import PendingButton from "./PendingButton";
 
 
-const FriendList = ({ friendList, updateFriendList, pendingFriends, updatePendingFriends, notification, setNotification }) => {
+const FriendList = ({ friendList, updateFriendList, pendingFriends, updatePendingFriends, notification, setNotification, you }) => {
 
     const navigate = useNavigate();
     const [addFriend, setAddFriend] = useState(false);
+    const socket = useContext(SocketContext);
 
     
     const clickToCreateChat = async (userName) => {
@@ -35,6 +37,35 @@ const FriendList = ({ friendList, updateFriendList, pendingFriends, updatePendin
             </div>
         )
     })
+
+    
+    const handleReceivedFriendRequest = useCallback((requestSender) => {
+        console.log("friend request received")
+
+        updatePendingFriends([...pendingFriends, requestSender])
+    
+    },[pendingFriends, updatePendingFriends])
+
+    
+    const handleAcceptedFriendRequest = useCallback((you) => {
+
+        updateFriendList([...friendList, you])
+    
+    },[updateFriendList, friendList])
+
+
+    useEffect(() => {
+
+        socket.on("FRIEND_REQUEST_RECEIVED", handleReceivedFriendRequest)
+        socket.on("NEW_FRIEND", handleAcceptedFriendRequest)
+
+        return () => {
+            socket.off("FRIEND_REQUEST_RECEIVED", handleReceivedFriendRequest)
+            socket.off("NEW_FRIEND", handleAcceptedFriendRequest)
+        }
+
+    },[handleReceivedFriendRequest, handleAcceptedFriendRequest, socket])
+
     
 
     return (
@@ -50,13 +81,15 @@ const FriendList = ({ friendList, updateFriendList, pendingFriends, updatePendin
               pendingFriends={pendingFriends}
               updatePendingFriends={updatePendingFriends}
               updateFriendList={updateFriendList}
+              you={you}
             /> : null }
           <div className="user-list__content">
             {renderFriendList.length > 0 ? renderFriendList : <p>No friends yet</p>}
           </div>
           { addFriend ? <AddFriendModal friendList={friendList} 
             setAddFriend={setAddFriend} 
-            updateFriendList={updateFriendList}/> : null}
+            updateFriendList={updateFriendList}
+            you={you}/> : null}
         </div>
     )
 }

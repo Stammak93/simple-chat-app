@@ -29,7 +29,8 @@ module.exports = (app) => {
                 return res.status(200).json({
                     friends: data.friendList,
                     pending: data.pendingFriends,
-                    you: req.user.userName
+                    you: req.user.userName,
+                    notifications: data.notifications
                 })
             }
 
@@ -55,19 +56,19 @@ module.exports = (app) => {
                 const checkFriend = await User.findOne({ googleId: req.user.googleId, friendList: req.body.params.userName }).lean()
                 
                 // check if user in pending list of other user
-                let checkPending = false
+                let checkPending = 0
                 
                 data.pendingFriends.forEach(pending => {
                     if(pending === req.user.userName) {
-                        checkPending = true
+                        checkPending += 1
                     }
                 })
 
-                if(checkPending) {
+                if(checkPending > 0) {
                     return res.status(304).send("Request already sent.")
                 }
 
-                if(!checkFriend) {
+                if(checkFriend === undefined || checkFriend === null) {
                     await User.updateOne({ userName: req.body.params.userName}, { $push: { pendingFriends: req.user.userName }})
                     return res.status(201).send("Friend Request Sent.")
                 }
@@ -86,7 +87,7 @@ module.exports = (app) => {
             
             if(req.body.params.willAccept) {
 
-                const data = await User.updateOne({ googleId: req.user.googleId }, { $pull: { pendingFriends: req.body.params.userName }, 
+                const data = await User.findOneAndUpdate({ googleId: req.user.googleId }, { $pull: { pendingFriends: req.body.params.userName }, 
                     $push: { friendList: req.body.params.userName }}, { new: true })
 
                 await User.updateOne({ userName: req.body.params.userName }, { $push: { friendList: req.user.userName }})

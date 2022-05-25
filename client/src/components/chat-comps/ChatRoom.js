@@ -4,7 +4,7 @@ import { SocketContext } from "../../context/socket";
 import axios from "axios";
 
 
-const ChatRoom = ({ you, setYou }) => {
+const ChatRoom = ({ you, setYou, setPageStatus }) => {
 
     const [chatRoomDetails, setChatRoomDetails] = useState([]);
     const [message, setMessage] = useState("");
@@ -24,7 +24,9 @@ const ChatRoom = ({ you, setYou }) => {
             }
 
             if(id.length < 8) {
-                return console.log("not a room")
+                navigate("/chat/1")
+                setPageStatus(200)
+                return;
             } 
 
             const response = await axios.get("/api/chatroom", {
@@ -49,7 +51,7 @@ const ChatRoom = ({ you, setYou }) => {
             clearTimeout(getChatRoomTimeoutId)
         }
     
-    },[id, navigate, socket, setYou])
+    },[id, navigate, socket, setYou, setPageStatus])
 
 
     useEffect(() => {

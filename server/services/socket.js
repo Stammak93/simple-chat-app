@@ -38,6 +38,16 @@ module.exports = (server) => {
                 console.log("An error has occured")
             }
         })
+
+        socket.on("FRIEND_REQUEST_SENT", ({ friendToAdd, requestSender }) => {
+            console.log(friendToAdd)
+            console.log(requestSender)
+            io.to(friendToAdd).emit("FRIEND_REQUEST_RECEIVED", (requestSender))
+        })
+
+        socket.on("FRIEND_REQUEST_ACCEPTED", ({ userName, you }) => {
+            io.to(userName).emit("NEW_FRIEND", (you))
+        })
     })
 
 }

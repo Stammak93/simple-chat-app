@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import AcceptRequest from "./AcceptRequest";
 
 
-const PendingButton = ({ pendingFriends, updatePendingFriends, updateFriendList}) => {
+const PendingButton = ({ pendingFriends, updatePendingFriends, updateFriendList, you }) => {
 
     const [pendingList, setPendingList] = useState(false);
     const ref = useRef();
@@ -40,6 +40,7 @@ const PendingButton = ({ pendingFriends, updatePendingFriends, updateFriendList}
               pendingFriends={pendingFriends} 
               updatePendingFriends={updatePendingFriends}
               updateFriendList={updateFriendList}
+              you={you}
             /> : null }
         </div>
     )

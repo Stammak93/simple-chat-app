@@ -44,7 +44,9 @@ passport.use(
                 userName: randomUserName,
                 userIsOnline: true,
                 friendList: [],
-                currentChat: ""
+                currentChat: "",
+                pendingFriends: [],
+                notifications: []
                 
             }).save()
 

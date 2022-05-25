@@ -1,18 +1,20 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import ReactDOM from "react-dom";
+import { SocketContext } from "../../context/socket";
 import axios from "axios";
 
 
-const AddFriendModal = ({ friendList, setAddFriend }) => {
+const AddFriendModal = ({ friendList, setAddFriend, you }) => {
 
     const [friendToAdd, setFriendToAdd] = useState("");
+    const socket = useContext(SocketContext);
 
 
     const userAddClick = async () => {
 
         let friendExists = 0
         friendList.forEach((friend) => {
-            if(friend.userName === friendToAdd) {
+            if(friend === friendToAdd) {
                 friendExists += 1
             }
         })
@@ -33,13 +35,15 @@ const AddFriendModal = ({ friendList, setAddFriend }) => {
             })
     
             if(response.status === 201) {
+
+                let requestSender = you
+                socket.emit("FRIEND_REQUEST_SENT", ({ friendToAdd, requestSender}))
                 setAddFriend(false)
                 friendToAdd("")
-                return;
             }
     
         } catch {
-              console.log("I need to work on this.")
+              return;
         }
     
     }

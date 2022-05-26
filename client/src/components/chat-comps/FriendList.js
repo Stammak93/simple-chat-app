@@ -40,7 +40,7 @@ const FriendList = ({ friendList, updateFriendList, pendingFriends, updatePendin
         return(
             <div onClick={() => clickToCreateChat(user)} className="user-item" key={index}>
               <p>{user}</p>
-              {notification.includes(user) ? <p>New message</p> : null}
+              {notification.includes(user) ? <p className="new-message">New message</p> : null}
             </div>
         )
     })
@@ -78,19 +78,19 @@ const FriendList = ({ friendList, updateFriendList, pendingFriends, updatePendin
         <div className="user-list">
           <div className="user-list__header">
             <p>Friend List</p>
+            <div className="add-friend">
+              <button onClick={() => setAddFriend(true)} className="add-friend__btn">Add Friend</button>
+            </div>
+            { pendingFriends.length > 0 ? 
+              <PendingButton 
+                pendingFriends={pendingFriends}
+                updatePendingFriends={updatePendingFriends}
+                updateFriendList={updateFriendList}
+                you={you}
+              /> : null }
           </div>
-          <div className="add-friend">
-            <button onClick={() => setAddFriend(true)} className="add-friend__btn">Add Friend</button>
-          </div>
-          { pendingFriends.length > 0 ? 
-            <PendingButton 
-              pendingFriends={pendingFriends}
-              updatePendingFriends={updatePendingFriends}
-              updateFriendList={updateFriendList}
-              you={you}
-            /> : null }
           <div className="user-list__content">
-            {renderFriendList.length > 0 ? renderFriendList : <p>No friends yet</p>}
+            { renderFriendList.length > 0 ? renderFriendList : <p>No friends yet</p>}
           </div>
           { addFriend ? <AddFriendModal friendList={friendList} 
             setAddFriend={setAddFriend} 

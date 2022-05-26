@@ -47,6 +47,7 @@ module.exports = (app) => {
             if(req.user.userName === req.body.params.userName) {
                 return res.status(400).send("You cannot add yourself as a friend.")
             }
+            
             // check user exists
             const data = await User.findOne({ userName: req.body.params.userName }).lean()
 
@@ -108,6 +109,12 @@ module.exports = (app) => {
 
         if(req.isAuthenticated()) {
 
+            const checkIfNotificationExists = await User.findOne({ userName: req.body.params.userName, notifications: req.user.userName }).lean()
+
+            if(checkIfNotificationExists === true) {
+                return res.status(200).send("User has already been notified.")
+            }
+
             await User.updateOne({ userName: req.body.params.userName }, { $push: { notifications: req.user.userName }})
             return res.status(201).send("User notified.")
         }
@@ -118,7 +125,7 @@ module.exports = (app) => {
     app.get("/api/logout", async (req,res) => {
 
         if(req.isAuthenticated()) {
-            
+
             await User.updateOne({ googleId: req.user.googleId}, { userIsOnline: false })
             req.logout()
             return res.redirect("/")

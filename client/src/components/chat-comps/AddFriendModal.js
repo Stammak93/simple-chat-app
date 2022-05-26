@@ -48,7 +48,7 @@ const AddFriendModal = ({ friendList, setAddFriend, you }) => {
     
     }
 
-
+    console.log("modal rendering")
     return ReactDOM.createPortal(
         <div className="add-friend__modal-container">
           <div className="add-friend__modal">

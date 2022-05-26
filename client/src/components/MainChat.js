@@ -39,10 +39,9 @@ const MainChat = () => {
             }
         }
 
+        console.log("main chat rendering")
         const getUserListTimeoutId = setTimeout(() => {
-            
             getFriendList()
-        
         },700)
 
         return () => {

@@ -4,11 +4,13 @@ import { SocketContext } from "../../context/socket";
 import axios from "axios";
 
 
-const ChatRoom = ({ you, setYou, setPageStatus, notification }) => {
+const ChatRoom = ({ you, setYou, setPageStatus }) => {
 
     const [chatRoomDetails, setChatRoomDetails] = useState([]);
     const [message, setMessage] = useState("");
     const [friend, setFriend] = useState("");
+    const [notificationSent, setNotificationSent] = useState(false);
+    
     const navigate = useNavigate()
     const socket = useContext(SocketContext);
     const { id } = useParams();
@@ -23,9 +25,9 @@ const ChatRoom = ({ you, setYou, setPageStatus, notification }) => {
                 return navigate("/chat/1")
             }
 
-            if(id.length < 8) {
-                return navigate("/chat/1")
-            } 
+            if(id === "1") {
+                return;
+            }
 
             const response = await axios.get("/api/chatroom", {
                 params: { roomId: id }
@@ -35,10 +37,13 @@ const ChatRoom = ({ you, setYou, setPageStatus, notification }) => {
                 setChatRoomDetails(response.data.room)
                 setFriend(response.data.friend)
                 socket.emit("REQUEST_JOIN", (id))
+            
+            } else {
+                return navigate("/chat/1")
             }
         }
 
-
+        console.log("chatroom rendering")
         const getChatRoomTimeoutId = setTimeout(() => {
             
             getChatRoom()
@@ -51,7 +56,8 @@ const ChatRoom = ({ you, setYou, setPageStatus, notification }) => {
     
     },[id, navigate, socket, setYou, setPageStatus])
 
-
+    
+    // scroll to the bottom on page load and view latest messages
     useEffect(() => {
 
         if(chatRoomDetails.length > 10) {
@@ -63,7 +69,8 @@ const ChatRoom = ({ you, setYou, setPageStatus, notification }) => {
     // handle user sending message
     const handleSentMessage = useCallback(async(message) => {
 
-        if(message.length < 1) {
+        if(message.length < 1 || id === "1") {
+            setMessage("")
             return;
         }
 
@@ -84,29 +91,40 @@ const ChatRoom = ({ you, setYou, setPageStatus, notification }) => {
             setMessage("")
         }
 
-    },[id, socket, you, friend, chatRoomDetails])
+    },[id, socket, you, friend, chatRoomDetails, setMessage])
 
-
+    // handle user receiving a message event
     const handleReceivedMessage = useCallback(({ messageObj }) => {
 
         setChatRoomDetails([...chatRoomDetails, messageObj])
         setMessage("")
-        ref.current.lastChild.scrollIntoView();
+
+        if(chatRoomDetails.length > 10) {
+            ref.current.lastChild.scrollIntoView();
+        }
         
     },[chatRoomDetails])
 
 
     const handleOfflineMessage = useCallback( async () => {
+
+        if(notificationSent) {
+            return;
+        }
         
-        const response = axios.post("/api/updateNotifications", {
+        const response = await axios.post("/api/updateNotifications", {
             params: { userName: friend }
         })
 
         if(response.status === 201) {
-            console.log("notification sent.")
+            setNotificationSent(true)   
+        }
+
+        if(response.status === 200) {
+            setNotificationSent(true)
         }
         
-    },[friend])
+    },[friend, notificationSent])
 
 
     useEffect(() => {
@@ -169,15 +187,20 @@ const ChatRoom = ({ you, setYou, setPageStatus, notification }) => {
     return (
         <div className="chat-room">
           <div className="chat-room__header">
-            <div>
-              <p className="friend-details">{friend}</p>
+            <div className="friend-details">
+              <p>Talking to</p>
+              <p className="friend-username">{friend ? friend : "No one"}</p>
+            </div>
+            <div className="user-name">
+              <p>Welcome</p>
+              <p>{you}</p>
             </div>
             <div className="header-logout">
               <button className="header-logout__btn" onClick={() => logoutClick()}>Logout</button>
             </div>
           </div>
           <div ref={ref} className="chat-room__content">
-            {renderChatRoom.length > 0 ? renderChatRoom : <p>No info yet</p>}
+            {renderChatRoom.length > 0 ? renderChatRoom : null}
           </div>
           <div className="message-enablers">
             <textarea className="message-input" value={message} onChange={(e) => setMessage(e.target.value)} />

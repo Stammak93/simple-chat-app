@@ -1,5 +1,5 @@
 import React from "react";
-import backgroundTwo from "../images/backgrounds/background-img-two.jpg";
+import backgroundTwo from "../images/backgrounds/background-img.jpg";
 import wave from "../images/backgrounds/bg-waves.svg";
 
 

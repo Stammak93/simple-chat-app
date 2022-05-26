@@ -6,7 +6,6 @@
     justify-content: center;
     align-items: center;
     z-index: 0;
-    background-color: transparent;
 }
 
 .main-chat {
@@ -17,33 +16,7 @@
     min-height: 20em;
     min-width: 41em;
     border-radius: 0.5em;
-    background-color: transparent;
 }
-
-.header-logout {
-    display: flex;
-    justify-content: flex-end;
-    width: 7%;
-    min-width: 5em;
-    height: 100%;
-}
-
-.header-logout__btn {
-    width: 8em;
-    height: 100%;
-    font-size: 1.1em;
-    background-color: #46b7c6;
-    color: #363636;
-    border: 0.1em solid #808080;
-    border-radius: 0em 0em 0em 1em;
-    font-family: 'Dosis', sans-serif;
-}
-
-.header-logout__btn:hover {
-    background-color: #86effd;
-    cursor: pointer;
-}
-
 
 .div-for-content {
     display: flex;
@@ -59,14 +32,16 @@
 
 .pending-list-toggle {
     width: 100%;
-    height: 4em;
+    height: auto;
 }
 
 .pending-list-toggle__btn {
     width: 100%;
     height: 4em;
     background-color: #46b7c6;
-    border: 0.1em solid #363636;
+    border: 0.05em solid #363636;
+    font-size: 0.9em;
+    border-radius: 0.3em;
 }
 
 .pending-list-toggle__btn:hover {
@@ -76,6 +51,7 @@
 
 .pending-friend-list {
     display: flex;
+    flex-direction: column;
     position: absolute;
     background-color: white;
     width: 100%;
@@ -83,7 +59,16 @@
     overflow-y: auto;
     overflow-x: hidden;
     scrollbar-width: thin;
-    scrollbar-color: #46b7c6 #363636; 
+    scrollbar-color: #46b7c6 #363636;
+}
+
+.pending-friend-list::-webkit-scrollbar {
+    width: 0.5em;
+    background-color: white;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #46b7c6;
 }
 
 .pending-item {
@@ -132,7 +117,7 @@
     position: relative;
     top: 0;
     left: 0;
-    min-width: 15em;
+    min-width: 12em;
     height: 100vh;
     flex-basis: 14%;
     border-right: 0.1em solid #808080;
@@ -142,17 +127,23 @@
     background-color: #363636;
 }
 
+.user-list::-webkit-scrollbar {
+    width: 0.5em;
+    background-color: white;
+}
+
 .user-list__header {
     display: flex;
     position: sticky;
+    flex-direction: column;
     top: 0;
     justify-content: center;
     align-items: center;
-    background-color: white;
     text-align: center;
     width: 100%;
-    height: 4em;
+    height: auto;
     font-size: 1.1em;
+    background-color: #ffffff;
 }
 
 .add-friend {
@@ -165,7 +156,7 @@
     font-size: 1.1em;
     background-color: #46b7c6;
     color: #363636;
-    border: 0.1em solid #808080;
+    border: 0.05em solid #363636;
     border-radius: 0.2em;
     font-family: 'Dosis', sans-serif;
 }
@@ -181,9 +172,17 @@
     gap: 2em;
     font-size: 1.1em;
     height: auto;
-    max-height: 4em;
+    max-height: 5%;
     background-color: #ffffff;
     width: 100%;
+    border-bottom: 0.01em solid #363636;
+}
+
+.new-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
 
 .user-item:hover {
@@ -212,8 +211,51 @@
 }
 
 .friend-details {
+    display: flex;
+    flex-direction: column;
+    line-height: 0em;
+    margin-left: 0.2em;
+}
+
+.friend-username {
     text-decoration: underline;
-    margin-left: 0.5em;
+    min-width: 10%;
+}
+
+.user-name {
+    line-height: 0.3em;
+    text-align: center;
+    background-color: #46b7c6;
+    height: 100%;
+    font-size: 1em;
+    min-width: 15%;
+    border: 0.05em solid #363636;
+    border-radius: 0em 0em 0.5em 0.5em;
+    box-shadow: 0em 0em 0.7em #363636;
+}
+
+.header-logout {
+    display: flex;
+    justify-content: flex-end;
+    width: 10%;
+    min-width: 5em;
+    height: 100%;
+}
+
+.header-logout__btn {
+    width: 7em;
+    height: 100%;
+    font-size: 1.1em;
+    background-color: #46b7c6;
+    color: #363636;
+    border: 0.1em solid #363636;
+    border-radius: 0em 0em 0em 1em;
+    font-family: 'Dosis', sans-serif;
+}
+
+.header-logout__btn:hover {
+    background-color: #86effd;
+    cursor: pointer;
 }
 
 .chat-room__content {
@@ -224,7 +266,12 @@
     scrollbar-color: #46b7c6 #363636; 
     display: flex;
     flex-direction: column;
-    height: calc(100% - 17%);
+    height: calc(100% - 18%);
+}
+
+.chat-room__content::-webkit-scrollbar {
+    width: 0.5em;
+    background-color: #363636;
 }
 
 .chat-room__content .message-right {
@@ -241,21 +288,32 @@
     align-items: flex-start;
     margin-bottom: 1em;
     width: 100%;
+    margin-left: 0.5em;
+}
+
+.message-right .message-item {
+    background: linear-gradient(45deg, #46b7c6, #a2f0fb);
+}
+
+.message-left .message-item {
+    background-color: #ffffff;
 }
 
 .message-item {
     line-height: 1em;
-    margin-right: 1em;
-    min-width: 10%;
+    min-width: 7%;
     width: auto;
-    background: linear-gradient(10deg, #46b7c6, #86effd,white 99%);
-    border-radius: 1em 1em 1em 1em;
+    max-width: 20em;
+    border-radius: 1em;
+    margin-top: 0.5em;
+    margin-right: 0.5em;
 }
 
 .message-item p.message-body {
     word-wrap: break-word;
     white-space: normal;
     height: auto;
+    font-size: 1.1em;
 }
 
 .message-item p.message-time {
@@ -272,7 +330,7 @@
 }
 
 .message-input {
-    width: 40%;
+    width: 50%;
     max-width: 50%;
     height: 3.2em;
     font-size: 1.2em;
@@ -281,11 +339,13 @@
     border: 0.2em solid #46b7c6;
     overflow-wrap: break-word;
     resize: none;
+    background-color: #dffafd;
 }
 
 .message-input:focus {
     outline: none;
-    border: 0.2em solid #808080;
+    border: 0.3em solid #86effd;
+    background-color: #ffffff;
     height: 3em;
 }
 
@@ -326,26 +386,28 @@
     display: flex;
     flex-direction: column;
     background-color: #ffffff;
+    border: 0.2em solid #46b7c6;
     justify-content: space-evenly;
     align-items: center;
-    height: 30%;
-    width: 18%;
-    min-width: 25em;
-    min-height: 20em;
-    border-radius: 20%;
-    border-radius: 3em 0em 3em 0em;
+    height: 28%;
+    width: 14%;
+    min-width: 15em;
+    min-height: 18em;
+    border-radius: 0.5em;
 }
 
 .add-friend__modal-title {
     color: #363636;
+    font-size: 0.9em;
+    
 }
 
 .add-friend__modal-input {
     display: flex;
     justify-content: center;
-    width: 75%;
+    width: 70%;
     margin-bottom: 1em;
-    border-bottom: 0.2em solid #363636;
+    border-bottom: 0.2em solid #46b7c6;
 }
 
 .add-friend__modal-input input {
@@ -362,17 +424,19 @@
 .add-friend__modal-btns {
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
-    width: 100%;
+    justify-content: center;
+    gap: 1em;
+    width: 70%;
 }
 
 .add-friend__modal-btn {
-    width: 35%;
+    width: 100%;
+    
 }
 
 .add-friend__modal-btn button {
-    min-width: 8em;
     width: 100%;
+    min-width: 4em;
     height: 4em;
     background-color: #ffffff;
     color: #363636;
@@ -380,17 +444,19 @@
     border-radius: 0.5em;
     border: 0.1em solid #363636;
     box-shadow: 0em 0.1em 0.2em #363636;
+    flex-basis: 45%;
+    font-family: 'Dosis', sans-serif;
 }
 
-.add-friend__modal-btn:nth-child(1) button:hover {
+.add-friend__modal-btn:nth-child(2) button:hover {
     background-color: #363636;
-    color: #ffffff;
-    border-color: #ffffff;
+    color: #46b7c6;
+    border-color: #46b7c6;
     transform: scale(1.1);
     cursor: pointer;
 }
 
-.add-friend__modal-btn:nth-child(2) button:hover {
+.add-friend__modal-btn:nth-child(1) button:hover {
     background-color: #46b7c6;
     border-color: #363636;
     color: #363636;

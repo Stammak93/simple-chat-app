@@ -20,9 +20,9 @@ const WelcomeScreen = () => {
           
                 if(response.status === 200) {
                     setLoggedIn(true)
-                    console.log(response.data)
                     navigate(`/chat/${response.data}`)
                 }
+            
             } catch {
                 setLoggedIn(false)
             }

@@ -40,14 +40,14 @@ body {
     display: flex;
     border-radius: 0.5em;
     width: 50%;
-    height: 55%;
+    height: 50%;
     min-width: 12em;
     min-height: 10em;
     z-index: 100;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    border-radius: 2em 0em 2em 0em;
+    border-radius: 0.5em;
 }
 
 
@@ -56,27 +56,29 @@ body {
 .login-area {
     display: flex;
     background-color: #ffffff72;
+    box-shadow: 0em 0em 0.5em #363636;
     justify-content: center;
     align-items: center;
-    height: 50%;
-    width: 30%;
+    height: 40%;
+    width: 20%;
     min-width: 15em;
     min-height: 12em;
     border-radius: 20%;
-    border-radius: 3em 0em 3em 0em;
+    border-radius: 3em;
 }
 
 .login {
-    border: 0.1em solid #808080;
-    box-shadow: 0em 0em 1em #b2b2b2;
-    background-color: #ffffff35;
+    border: 0.1em solid #363636;
+    box-shadow: 0em 0em 0.2em #363636;
+    background-color: #ffffff95;
+    border-radius: 1em;
 }
 
 .welcome-btn {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 70%;
+    width: 80%;
     height: 30%;
 }
 
@@ -84,16 +86,15 @@ body {
     width: 100%;
     min-height: 4em;
     height: 100%;
-    border: 0.1em solid #808080;
-    background-color: #ffffff99;
-    color: #808080;
-    border-radius: 20px 0em 20px 0em;
+    border: 0.1em solid #363636;
+    background-color: #ffffff;
+    color: #363636;
+    border-radius: 0.5em;
     font-size: 1.2em;
-    font-weight: 500;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     transition: 300ms;
     text-align: center;
-    box-shadow: 0em 0em 1em #b2b2b2;
+    box-shadow: 0em 0em 0.2em #363636;
+    font-family: 'Dosis', sans-serif;
 }
 
 .welcome-btn a  {

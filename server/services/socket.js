@@ -9,7 +9,7 @@ module.exports = (server) => {
 
 
     io.on("connection", (socket) => {
-        console.log("welcome to Chaturbate", socket.id)
+        
         io.to(socket.id).emit("IDENTIFY_YOURSELF")
 
         
@@ -30,7 +30,7 @@ module.exports = (server) => {
             try {
                 if(io.sockets.adapter.rooms.get(id).size === 2) {
                     
-                    socket.broadcast.to(friend).emit("RECEIVED_MESSAGE_IN_ROOM", ({ messageObj }))
+                    socket.to(friend).emit("RECEIVED_MESSAGE_IN_ROOM", ({ messageObj }))
                 
                 } else if(io.sockets.adapter.rooms.get(friend)) {
                     

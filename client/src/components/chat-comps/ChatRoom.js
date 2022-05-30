@@ -1,25 +1,51 @@
 import React, { useEffect, useState, useContext, useCallback, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useQuery } from "@apollo/client";
 import { SocketContext } from "../../context/socket";
 import axios from "axios";
+import { GET_ROOM } from "../../service/graphql-queries";
 
 
-const ChatRoom = ({ you, setYou, setPageStatus }) => {
+const ChatRoom = ({ you, setYou, setPageStatus, notificationSent, setNotificationSent }) => {
 
-    const [chatRoomDetails, setChatRoomDetails] = useState([]);
+    const [chatRoomMessages, setChatRoomMessages] = useState([]);
     const [message, setMessage] = useState("");
     const [friend, setFriend] = useState("");
-    const [notificationSent, setNotificationSent] = useState(false);
     
     const navigate = useNavigate()
     const socket = useContext(SocketContext);
     const { id } = useParams();
     const ref = useRef();
+    const refTwo = useRef();
+    const { loading, error, data } = useQuery(GET_ROOM, {
+        variables: {
+            roomId: id
+        }
+    })
 
 
     useEffect(() => {
+        
+        if(id === undefined) {
+            return navigate("/chat/1")
+        }
 
-        const getChatRoom = async () => {
+        if(id === "1") {
+            return;
+        }
+
+        if(error) {
+            navigate("/chat/1")
+        }
+
+        if(data) {
+            setChatRoomMessages(data.getChatRoom.chatRoom.messages)
+            setFriend(data.getChatRoom.friend.userName)
+            socket.emit("REQUEST_JOIN", (id))
+        }
+        
+        
+        /*const getChatRoom = async () => {
 
             if(id === undefined) {
                 return navigate("/chat/1")
@@ -52,21 +78,43 @@ const ChatRoom = ({ you, setYou, setPageStatus }) => {
 
         return () => {
             clearTimeout(getChatRoomTimeoutId)
-        }
+        }*/
     
-    },[id, navigate, socket, setYou, setPageStatus])
+    },[id, navigate, data, error, socket])//[id, navigate, socket, setYou, setPageStatus])
 
     
     // scroll to the bottom on page load and view latest messages
     useEffect(() => {
-
-        if(chatRoomDetails.length > 10) {
+        console.log("running this script")
+        if(chatRoomMessages.length > 10) {
             ref.current.lastChild.scrollIntoView();
         }
-    })
+    
+    },[chatRoomMessages.length])
+
+
+    useEffect(() => {
+
+        const sendWithEnter = (e) => {
+
+            if(e.key === "Enter") {
+                document.getElementById("send-message").click()
+                refTwo.current.blur()
+            }
+        }
+
+        let textAreaInput = refTwo.current
+        textAreaInput.addEventListener("keypress", sendWithEnter)
+
+        return () => {
+            textAreaInput.removeEventListener("keypress", sendWithEnter)
+        }
+
+    },[])
 
 
     // handle user sending message
+    // prevent them from sending messages at the main page
     const handleSentMessage = useCallback(async(message) => {
 
         if(message.length < 1 || id === "1") {
@@ -87,25 +135,25 @@ const ChatRoom = ({ you, setYou, setPageStatus }) => {
 
         if(response.status === 201) {
             socket.emit("SEND_MESSAGE",({ id, friend, you, messageObj }))
-            setChatRoomDetails([...chatRoomDetails, messageObj])
+            setChatRoomMessages([...chatRoomMessages, messageObj])
             setMessage("")
         }
 
-    },[id, socket, you, friend, chatRoomDetails, setMessage])
+    },[id, socket, you, friend, chatRoomMessages, setMessage])
 
     // handle user receiving a message event
     const handleReceivedMessage = useCallback(({ messageObj }) => {
 
-        setChatRoomDetails([...chatRoomDetails, messageObj])
+        setChatRoomMessages([...chatRoomMessages, messageObj])
         setMessage("")
 
-        if(chatRoomDetails.length > 10) {
+        if(chatRoomMessages.length > 10) {
             ref.current.lastChild.scrollIntoView();
         }
         
-    },[chatRoomDetails])
+    },[chatRoomMessages])
 
-
+    // send friend a notification if they are offline
     const handleOfflineMessage = useCallback( async () => {
 
         if(notificationSent) {
@@ -124,7 +172,7 @@ const ChatRoom = ({ you, setYou, setPageStatus }) => {
             setNotificationSent(true)
         }
         
-    },[friend, notificationSent])
+    },[friend, notificationSent, setNotificationSent])
 
 
     useEffect(() => {
@@ -156,7 +204,7 @@ const ChatRoom = ({ you, setYou, setPageStatus }) => {
     }
 
 
-    const renderChatRoom = chatRoomDetails.map((details,index) => {
+    const renderChatRoom = chatRoomMessages.map((details,index) => {
 
         if(details) {
 
@@ -203,8 +251,8 @@ const ChatRoom = ({ you, setYou, setPageStatus }) => {
             {renderChatRoom.length > 0 ? renderChatRoom : null}
           </div>
           <div className="message-enablers">
-            <textarea className="message-input" value={message} onChange={(e) => setMessage(e.target.value)} />
-            <button className="message-btn" onClick={() => handleSentMessage(message)}>Send</button>
+            <textarea ref={refTwo} className="message-input" value={message} onChange={(e) => setMessage(e.target.value)} />
+            <button id="send-message" className="message-btn" onClick={() => handleSentMessage(message)}>Send</button>
           </div>
         </div>
     )

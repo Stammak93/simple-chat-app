@@ -11,16 +11,21 @@ module.exports = (server) => {
     io.on("connection", (socket) => {
         
         io.to(socket.id).emit("IDENTIFY_YOURSELF")
-
         
-        socket.on("IDENTIFY_SOCKET", (you) => {
+        // attempt to join room on connect
+        socket.on("IDENTIFY_SOCKET", ({ theClient, id}) => {
 
-            if(you) {
-                console.log("user identified", you)
-                socket.join(you)
+            if(theClient) {
+                console.log("user identified", theClient)
+                socket.join(theClient)
+                if (id !== undefined && id !== "1") {
+                    console.log("joining socket to room id")
+                    socket.join(id)
+                }
             }
         })
 
+        // attempt to join room on render of new chat room 
         socket.on("REQUEST_JOIN", (id) => {
             socket.join(id)
         })

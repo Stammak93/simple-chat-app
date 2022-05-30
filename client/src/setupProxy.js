@@ -4,7 +4,7 @@ if(process.env.NODE_ENV !== "production") {
 
     module.exports = (app) => {
         app.use(
-            ["/api/*", "/auth/google"],
+            ["/api/*", "/auth/google", "/graphql"],
             createProxyMiddleware({
                 target: "http://localhost:5000"
             })

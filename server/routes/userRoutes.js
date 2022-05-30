@@ -40,6 +40,7 @@ module.exports = (app) => {
         return res.status(403).send("Unauthorized Access")
     })
 
+    
     app.post("/api/addFriend", async (req,res) => {
 
         if(req.isAuthenticated()) {
@@ -82,6 +83,7 @@ module.exports = (app) => {
         return res.status(403).send("Unauthorised Access")
     })
 
+    
     app.post("/api/acceptFriend", async (req,res) => {
 
         if(req.isAuthenticated()) {
@@ -105,6 +107,7 @@ module.exports = (app) => {
         return res.status(403).send("You shall not pass.")
     })
 
+    
     app.post("/api/updateNotifications", async (req,res) => {
 
         if(req.isAuthenticated()) {

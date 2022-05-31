@@ -1,5 +1,6 @@
 import React, { useCallback, useContext } from "react";
-import axios from "axios";
+import { useMutation } from "@apollo/client";
+import { ACCEPT_FRIEND } from "../../service/graphql-queries";
 import { SocketContext } from "../../context/socket";
 
 
@@ -7,41 +8,39 @@ const AcceptRequest = ({ pendingFriends, updatePendingFriends, updateFriendList,
 
 
     const socket = useContext(SocketContext);
+    const [acceptFriend] = useMutation(ACCEPT_FRIEND)
+
 
 
     const handleAcceptClick = useCallback(async (userName) => {
         
-        const response = await axios.post("/api/acceptFriend", {
-            params: { willAccept: true, userName: userName }
-        })
-
-        if(response.status === 201) {
-
-            if(response.data.pendingFriends === undefined || response.data.pendingFriends === null) {
-                updatePendingFriends([])
-                updateFriendList(response.data.friendList)
-                socket.emit("FRIEND_REQUEST_ACCEPTED", ({ userName, you }))
-            } else {
-                updatePendingFriends(response.data.pendingFriends)
-                updateFriendList(response.data.friendList)
-                socket.emit("FRIEND_REQUEST_ACCEPTED", ({ userName, you }))
-            }
+        
+        const response = await acceptFriend({ variables: {
+            willAccept: true,
+            friendUsername: userName
+        }})
+        
+        if(response) {
+            updatePendingFriends(response.data.acceptFriend.pendingFriends)
+            updateFriendList(response.data.acceptFriend.friendList)
+            socket.emit("FRIEND_REQUEST_ACCEPTED", ({ userName, you }))
         }
 
-    },[updateFriendList, updatePendingFriends, socket, you])
+    },[acceptFriend, updateFriendList, updatePendingFriends, socket, you])
 
 
     const handleDeclineClick = useCallback(async (userName) => {
 
-        const response = await axios.post("/api/acceptFriend", {
-            params: { willAccept: false, userName: userName }
-        })
-
-        if(response.status === 201) {
-            updatePendingFriends(response.data.pendingFriends)
+        const response = await acceptFriend({ variables: {
+            willAccept: false,
+            friendUsername: userName
+        }})
+        
+        if(response) {
+            updatePendingFriends(response.data.acceptFriend.pendingFriends)
         }
     
-    },[updatePendingFriends])
+    },[acceptFriend, updatePendingFriends])
     
     
     const renderPendingList = pendingFriends.map((friend, index) => {

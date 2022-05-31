@@ -1,13 +1,15 @@
 import React, { useContext, useState } from "react";
 import ReactDOM from "react-dom";
+import { useMutation } from "@apollo/client";
+import { ADD_USER } from "../../service/graphql-queries";
 import { SocketContext } from "../../context/socket";
-import axios from "axios";
 
 
 const AddFriendModal = ({ friendList, setAddFriend, you }) => {
 
     const [friendToAdd, setFriendToAdd] = useState("");
     const socket = useContext(SocketContext);
+    const [addUser] = useMutation(ADD_USER);
 
 
     const userAddClick = async () => {
@@ -19,16 +21,26 @@ const AddFriendModal = ({ friendList, setAddFriend, you }) => {
             }
         })
     
-        if(friendExists > 0) {
+        
+        if(friendExists > 0 || friendToAdd === you || !friendToAdd) {
             setFriendToAdd("")
             return;
         }
-        
-        if(!friendToAdd) {
-            return;
+
+        const response = await addUser({ variables: {
+            friendUsername: friendToAdd
+        }})
+
+        if(response) {
+            
+            let requestSender = you
+            socket.emit("FRIEND_REQUEST_SENT", ({ friendToAdd, requestSender}))
+            setAddFriend(false)
+            setFriendToAdd("")
         }
+
     
-        try {
+        /*try {
     
             const response = await axios.post("/api/addFriend", {
                 params: { userName: friendToAdd }
@@ -44,9 +56,10 @@ const AddFriendModal = ({ friendList, setAddFriend, you }) => {
     
         } catch {
               return;
-        }
+        }*/
     
     }
+
 
     console.log("modal rendering")
     return ReactDOM.createPortal(

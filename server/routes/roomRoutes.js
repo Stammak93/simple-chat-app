@@ -16,7 +16,7 @@ module.exports = (app) => {
                     { $pull: { notifications: req.body.params.userName}})
             }
 
-            document = await User.findOne({ userName: req.body.params.userName }).lean()
+            let document = await User.findOne({ userName: req.body.params.userName }).lean()
             let roomId = `${req.user.googleId}i${document.googleId}`
             let roomIdTwo = `${document.googleId}i${req.user.googleId}`
 

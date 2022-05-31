@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useContext, useCallback, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useQuery } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import { SocketContext } from "../../context/socket";
 import axios from "axios";
-import { GET_ROOM } from "../../service/graphql-queries";
+import { GET_ROOM, NEW_MESSAGE, NOTIFY_USER } from "../../service/graphql-queries";
 
 
-const ChatRoom = ({ you, setYou, setPageStatus, notificationSent, setNotificationSent }) => {
+const ChatRoom = ({ you, notificationSent, setNotificationSent }) => {
 
     const [chatRoomMessages, setChatRoomMessages] = useState([]);
     const [message, setMessage] = useState("");
@@ -17,25 +17,25 @@ const ChatRoom = ({ you, setYou, setPageStatus, notificationSent, setNotificatio
     const { id } = useParams();
     const ref = useRef();
     const refTwo = useRef();
+    
     const { loading, error, data } = useQuery(GET_ROOM, {
         variables: {
             roomId: id
         }
     })
 
+    const [newMessage] = useMutation(NEW_MESSAGE)
+    const [notifyUser] = useMutation(NOTIFY_USER)
+
 
     useEffect(() => {
         
-        if(id === undefined) {
+        if(id === undefined || error) {
             return navigate("/chat/1")
         }
 
         if(id === "1") {
             return;
-        }
-
-        if(error) {
-            navigate("/chat/1")
         }
 
         if(data) {
@@ -44,43 +44,8 @@ const ChatRoom = ({ you, setYou, setPageStatus, notificationSent, setNotificatio
             socket.emit("REQUEST_JOIN", (id))
         }
         
-        
-        /*const getChatRoom = async () => {
-
-            if(id === undefined) {
-                return navigate("/chat/1")
-            }
-
-            if(id === "1") {
-                return;
-            }
-
-            const response = await axios.get("/api/chatroom", {
-                params: { roomId: id }
-            })
-
-            if(response.status === 200) {
-                setChatRoomDetails(response.data.room)
-                setFriend(response.data.friend)
-                socket.emit("REQUEST_JOIN", (id))
-            
-            } else {
-                return navigate("/chat/1")
-            }
-        }
-
-        console.log("chatroom rendering")
-        const getChatRoomTimeoutId = setTimeout(() => {
-            
-            getChatRoom()
-        
-        },700)
-
-        return () => {
-            clearTimeout(getChatRoomTimeoutId)
-        }*/
     
-    },[id, navigate, data, error, socket])//[id, navigate, socket, setYou, setPageStatus])
+    },[id, navigate, data, error, socket])
 
     
     // scroll to the bottom on page load and view latest messages
@@ -123,24 +88,29 @@ const ChatRoom = ({ you, setYou, setPageStatus, notificationSent, setNotificatio
         }
 
         const timestamp = Math.floor(Date.now()/1000)
-        const messageObj = {
+        const response = await newMessage({ variables: {
+            roomId: id,
             sender: you,
             body: message,
             timestamp: timestamp
-        }
-
-        const response = await axios.post("/api/updateRoom", {
-            params: { roomId: id, messageObj: messageObj }
-        })
-
-        if(response.status === 201) {
+        }})
+        
+        if(response) {
+            
+            const messageObj = {
+                sender: you,
+                body: message,
+                timestamp: timestamp
+            }
+    
             socket.emit("SEND_MESSAGE",({ id, friend, you, messageObj }))
             setChatRoomMessages([...chatRoomMessages, messageObj])
             setMessage("")
         }
 
-    },[id, socket, you, friend, chatRoomMessages, setMessage])
+    },[id, socket, you, friend, chatRoomMessages, newMessage])
 
+    
     // handle user receiving a message event
     const handleReceivedMessage = useCallback(({ messageObj }) => {
 
@@ -153,6 +123,7 @@ const ChatRoom = ({ you, setYou, setPageStatus, notificationSent, setNotificatio
         
     },[chatRoomMessages])
 
+    
     // send friend a notification if they are offline
     const handleOfflineMessage = useCallback( async () => {
 
@@ -160,19 +131,15 @@ const ChatRoom = ({ you, setYou, setPageStatus, notificationSent, setNotificatio
             return;
         }
         
-        const response = await axios.post("/api/updateNotifications", {
-            params: { userName: friend }
-        })
+        const result = await notifyUser({ variables: {
+            friendUsername: friend
+        }})
 
-        if(response.status === 201) {
-            setNotificationSent(true)   
-        }
-
-        if(response.status === 200) {
+        if(result) {
             setNotificationSent(true)
         }
         
-    },[friend, notificationSent, setNotificationSent])
+    },[friend, notificationSent, setNotificationSent, notifyUser])
 
 
     useEffect(() => {

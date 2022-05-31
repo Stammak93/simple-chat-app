@@ -98,7 +98,7 @@ module.exports = (app) => {
                 return res.status(201).send(data)
             }
 
-            const data = await User.findOneAndUpdate({ userName: req.user.userName }, 
+            const data = await User.findOneAndUpdate({ googleId: req.user.googleId }, 
                 { $pull: { pendingFriends: req.body.params.userName }}, { new: true })
 
             return res.status(201).send(data)

@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useMutation } from "@apollo/client";
+import { CREATE_ROOM } from "../../service/graphql-queries";
 import { SocketContext } from "../../context/socket";
 import AddFriendModal from "./AddFriendModal";
 import PendingButton from "./PendingButton";
@@ -12,6 +13,8 @@ const FriendList = ({ friendList, updateFriendList, pendingFriends, updatePendin
     const [addFriend, setAddFriend] = useState(false);
     const socket = useContext(SocketContext);
 
+    const [createRoom] = useMutation(CREATE_ROOM);
+
     
     const clickToCreateChat = useCallback(async (friendUserName) => {
 
@@ -19,20 +22,21 @@ const FriendList = ({ friendList, updateFriendList, pendingFriends, updatePendin
 
         if(notification.length > 0) {
             result = true
-        } 
+        }
 
-        const response = await axios.post("/api/createRoom", {
-            params: { userName: friendUserName, updateNotifications: result }
-        })
+        const response = await createRoom({ variables: {
+            friendUsername: friendUserName,
+            updateNotifications: result
+        }})
 
-        if(response.status === 200 || response.status === 201 ) {
+        if(response) {
             
             let updatedNotifications = notification.filter(notif => notif !== friendUserName)
             setNotification(updatedNotifications)
-            navigate(`/chat/${response.data}`)
+            navigate(`/chat/${response.data.createRoom}`)
         }
 
-    },[setNotification, navigate, notification])
+    },[setNotification, navigate, notification, createRoom])
 
 
     const renderFriendList = friendList.map((user,index) => {

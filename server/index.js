@@ -1,5 +1,4 @@
 const express = require("express");
-//const cors = require("cors");
 const mongoose = require("mongoose");
 const passport = require("passport");
 const cookieSession = require("cookie-session");
@@ -7,7 +6,7 @@ const keys = require("./config/dev");
 require("./models/ChatRoom");
 require("./models/User");
 require("./services/passport");
-const graphServer = require("./routes/graphql");
+const graphServer = require("./services/graphql");
 
 const PORT = process.env.PORT || 5000;
 mongoose.connect(keys.mongoURI);
@@ -17,7 +16,7 @@ require("./services/socket")(server);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-//app.use(cors({origin: "http://localhost:3000", credentials:true}))
+
 
 app.use(
     cookieSession({

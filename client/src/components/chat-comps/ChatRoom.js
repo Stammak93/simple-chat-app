@@ -11,6 +11,7 @@ const ChatRoom = ({ you, notificationSent, setNotificationSent }) => {
     const [chatRoomMessages, setChatRoomMessages] = useState([]);
     const [message, setMessage] = useState("");
     const [friend, setFriend] = useState("");
+    const [autoScroll, setAutoScroll] = useState(true);
     
     const navigate = useNavigate()
     const socket = useContext(SocketContext);
@@ -51,13 +52,13 @@ const ChatRoom = ({ you, notificationSent, setNotificationSent }) => {
     // scroll to the bottom on page load and view latest messages
     useEffect(() => {
         console.log("running this script")
-        if(chatRoomMessages.length > 10) {
+        if(chatRoomMessages.length > 10 && autoScroll === true) {
             ref.current.lastChild.scrollIntoView();
         }
     
-    },[chatRoomMessages.length])
+    },[chatRoomMessages.length, autoScroll])
 
-
+    // create a listener for submitting messages with Enter
     useEffect(() => {
 
         const sendWithEnter = (e) => {
@@ -68,14 +69,30 @@ const ChatRoom = ({ you, notificationSent, setNotificationSent }) => {
             }
         }
 
+        const disableAutoScroll = (e) => {
+
+            if(e.deltaY < 0 && autoScroll === true) {
+                setAutoScroll(false)
+            }
+
+            if(e.deltaY > 0 && autoScroll === false) {
+                if(ref.current.clientHeight <= ref.current.scrollTop) {
+                    setAutoScroll(true)
+                }
+            }
+        }
+
         let textAreaInput = refTwo.current
+        let scrollBarEvent = ref
+        scrollBarEvent.current.addEventListener("wheel", disableAutoScroll)
         textAreaInput.addEventListener("keypress", sendWithEnter)
 
         return () => {
             textAreaInput.removeEventListener("keypress", sendWithEnter)
+            scrollBarEvent.current.removeEventListener("wheel", disableAutoScroll)
         }
 
-    },[])
+    },[autoScroll])
 
 
     // handle user sending message
@@ -103,9 +120,9 @@ const ChatRoom = ({ you, notificationSent, setNotificationSent }) => {
                 timestamp: timestamp
             }
     
-            socket.emit("SEND_MESSAGE",({ id, friend, you, messageObj }))
             setChatRoomMessages([...chatRoomMessages, messageObj])
             setMessage("")
+            socket.emit("SEND_MESSAGE",({ id, friend, you, messageObj }))
         }
 
     },[id, socket, you, friend, chatRoomMessages, newMessage])
@@ -117,11 +134,11 @@ const ChatRoom = ({ you, notificationSent, setNotificationSent }) => {
         setChatRoomMessages([...chatRoomMessages, messageObj])
         setMessage("")
 
-        if(chatRoomMessages.length > 10) {
+        if(chatRoomMessages.length > 10 && autoScroll === true) {
             ref.current.lastChild.scrollIntoView();
         }
         
-    },[chatRoomMessages])
+    },[chatRoomMessages, autoScroll])
 
     
     // send friend a notification if they are offline
@@ -214,6 +231,7 @@ const ChatRoom = ({ you, notificationSent, setNotificationSent }) => {
               <button className="header-logout__btn" onClick={() => logoutClick()}>Logout</button>
             </div>
           </div>
+          {autoScroll === false ? <p style={{ color: "white", display: "flex", justifyContent: "center"}}>Auto Scroll Disabled</p> : null}
           <div ref={ref} className="chat-room__content">
             {renderChatRoom.length > 0 ? renderChatRoom : null}
           </div>

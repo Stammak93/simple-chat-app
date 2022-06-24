@@ -31,7 +31,6 @@ app.use(passport.session());
 // add routes here with require(/pathsroute)(app)
 require("./routes/authRoutes")(app);
 require("./routes/userRoutes")(app);
-require("./routes/roomRoutes")(app);
 
 
 if(process.env.NODE_ENV === "production") {
@@ -52,4 +51,3 @@ const setupGraphQl = async (graphServer, app, server) => {
 }
 
 setupGraphQl(graphServer,app,server);
-// server.listen(PORT);

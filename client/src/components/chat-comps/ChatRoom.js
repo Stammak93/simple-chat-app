@@ -24,7 +24,8 @@ const ChatRoom = ({ you, notificationSent, setNotificationSent }) => {
             roomId: id
         }
     })
-
+    
+    // graphql queries
     const [newMessage] = useMutation(NEW_MESSAGE)
     const [notifyUser] = useMutation(NOTIFY_USER)
 
@@ -51,14 +52,19 @@ const ChatRoom = ({ you, notificationSent, setNotificationSent }) => {
     
     // scroll to the bottom on page load and view latest messages
     useEffect(() => {
-        console.log("running this script")
+
         if(chatRoomMessages.length > 10 && autoScroll === true) {
             ref.current.lastChild.scrollIntoView();
+
+        } else {
+            console.log("scroll disabled")
         }
     
     },[chatRoomMessages.length, autoScroll])
 
+    
     // create a listener for submitting messages with Enter
+    // create a toggle for the autoscroll event
     useEffect(() => {
 
         const sendWithEnter = (e) => {
@@ -76,7 +82,8 @@ const ChatRoom = ({ you, notificationSent, setNotificationSent }) => {
             }
 
             if(e.deltaY > 0 && autoScroll === false) {
-                if(ref.current.clientHeight <= ref.current.scrollTop) {
+                let scrollTriggerPoint = ref.current.scrollHeight - ref.current.scrollTop
+                if(scrollTriggerPoint === ref.current.clientHeight) {
                     setAutoScroll(true)
                 }
             }
@@ -187,7 +194,7 @@ const ChatRoom = ({ you, notificationSent, setNotificationSent }) => {
         }
     }
 
-
+    // map messages to component elements
     const renderChatRoom = chatRoomMessages.map((details,index) => {
 
         if(details) {
@@ -215,7 +222,7 @@ const ChatRoom = ({ you, notificationSent, setNotificationSent }) => {
         return null
     })
 
-
+    // render component
     return (
         <div className="chat-room">
           <div className="chat-room__header">

@@ -14,11 +14,10 @@ const App = () => {
         <Route exact path="/" element={<WelcomeScreen />}/>
         <Route exact path="/chat/:id" element={<MainChat />}/>
         <Route exact path="/chat" element={<MainChat />} />
-        <Route exact path="/auth/google" />
+        <Route exact path="auth/google" />
       </Routes>
     </BrowserRouter>
   );
 }
 
 export default App;
-// use react router to make just the chatroom component render within the main chatroom based on url

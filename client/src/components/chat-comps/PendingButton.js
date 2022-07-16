@@ -18,7 +18,7 @@ const PendingButton = ({ pendingFriends, updatePendingFriends, updateFriendList,
 
             setPendingList(false)
         }
-        console.log("pending button rendering")
+
         document.body.addEventListener("click", onBodyClick, { capture: true })
 
         return () => {

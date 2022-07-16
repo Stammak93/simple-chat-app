@@ -19,17 +19,18 @@ const ChatRoom = ({ you, notificationSent, setNotificationSent }) => {
     const ref = useRef();
     const refTwo = useRef();
     
+    // graphql query
     const { loading, error, data } = useQuery(GET_ROOM, {
         variables: {
             roomId: id
         }
     })
     
-    // graphql queries
+    // graphql mutations
     const [newMessage] = useMutation(NEW_MESSAGE)
     const [notifyUser] = useMutation(NOTIFY_USER)
 
-
+    // set content of chatroom on render
     useEffect(() => {
         
         if(id === undefined || error) {
@@ -56,8 +57,6 @@ const ChatRoom = ({ you, notificationSent, setNotificationSent }) => {
         if(chatRoomMessages.length > 10 && autoScroll === true) {
             ref.current.lastChild.scrollIntoView();
 
-        } else {
-            console.log("scroll disabled")
         }
     
     },[chatRoomMessages.length, autoScroll])
@@ -90,13 +89,13 @@ const ChatRoom = ({ you, notificationSent, setNotificationSent }) => {
         }
 
         let textAreaInput = refTwo.current
-        let scrollBarEvent = ref
-        scrollBarEvent.current.addEventListener("wheel", disableAutoScroll)
+        let scrollBarEvent = ref.current
+        scrollBarEvent.addEventListener("wheel", disableAutoScroll)
         textAreaInput.addEventListener("keypress", sendWithEnter)
 
         return () => {
             textAreaInput.removeEventListener("keypress", sendWithEnter)
-            scrollBarEvent.current.removeEventListener("wheel", disableAutoScroll)
+            scrollBarEvent.removeEventListener("wheel", disableAutoScroll)
         }
 
     },[autoScroll])

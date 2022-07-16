@@ -35,13 +35,22 @@ require("./routes/userRoutes")(app);
 
 if(process.env.NODE_ENV === "production") {
 
-    app.use(express.static("client/build"))
+    app.use(express.static("../client/build"))
 
     const path = require("path");
     app.get("*", (req,res) => {
-        res.sendFile(path.resolve(__dirname, "client", "build", "index.html"))
+        res.sendFile(path.resolve(__dirname, "../client", "build", "index.html"))
     })
 }
+
+// to test if it will be deployed succesfully on a hosting website
+// it works
+/* app.use(express.static("./client/build"))
+
+const path = require("path");
+app.get("*", (req,res) => {
+    res.sendFile(path.resolve(__dirname, "./client","build","index.html"))
+}) */
 
 const setupGraphQl = async (graphServer, app, server) => {
     await graphServer.start()

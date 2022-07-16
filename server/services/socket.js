@@ -16,10 +16,9 @@ module.exports = (server) => {
         socket.on("IDENTIFY_SOCKET", ({ theClient, id}) => {
 
             if(theClient) {
-                console.log("user identified", theClient)
+
                 socket.join(theClient)
                 if (id !== undefined && id !== "1") {
-                    console.log("joining socket to room id")
                     socket.join(id)
                 }
             }
@@ -48,7 +47,7 @@ module.exports = (server) => {
                 }
 
             } catch {
-                console.log("An error has occured")
+                console.log("An error has occured while sending a message")
             }
         })
 

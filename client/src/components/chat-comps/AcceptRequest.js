@@ -59,8 +59,6 @@ const AcceptRequest = ({ pendingFriends, updatePendingFriends, updateFriendList,
         )
     })
 
-
-    console.log("accept request rendering")
     return (
         <div className="pending-friend-list">
           {renderPendingList}

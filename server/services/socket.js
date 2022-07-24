@@ -33,9 +33,9 @@ module.exports = (server) => {
 
             try {
                 if(io.sockets.adapter.rooms.get(id).size === 2) {
-                    
-                    socket.to(friend).emit("RECEIVED_MESSAGE_IN_ROOM", ({ messageObj }))
-                
+
+                    io.to(id).emit("RECEIVED_MESSAGE_IN_ROOM", ({ messageObj })) // was friend not id
+
                 } else if(io.sockets.adapter.rooms.get(friend)) {
                     
                     let newSender = you
@@ -43,7 +43,7 @@ module.exports = (server) => {
                 
                 } else {
                     
-                    io.to(you).emit("RECEIVED_MESSAGE_OFFLINE")
+                    io.to(you).emit("RECEIVED_MESSAGE_OFFLINE", ({ messageObj }))
                 }
 
             } catch {

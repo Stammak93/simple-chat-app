@@ -2,14 +2,14 @@ import React, { useEffect, useState, useContext, useCallback, useRef } from "rea
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery, useMutation } from "@apollo/client";
 import { SocketContext } from "../../context/socket";
-import axios from "axios";
-import { GET_ROOM, NEW_MESSAGE, NOTIFY_USER } from "../../service/graphql-queries";
+import { GET_ROOM, NOTIFY_USER } from "../../service/graphql-queries";
+import MessageMaker from "./MessageMaker";
+import LogoutButton from "./LogoutButton";
 
 
 const ChatRoom = ({ you, notificationSent, setNotificationSent }) => {
 
     const [chatRoomMessages, setChatRoomMessages] = useState([]);
-    const [message, setMessage] = useState("");
     const [friend, setFriend] = useState("");
     const [autoScroll, setAutoScroll] = useState(true);
     
@@ -17,7 +17,6 @@ const ChatRoom = ({ you, notificationSent, setNotificationSent }) => {
     const socket = useContext(SocketContext);
     const { id } = useParams();
     const ref = useRef();
-    const refTwo = useRef();
     
     // graphql query
     const { loading, error, data } = useQuery(GET_ROOM, {
@@ -27,7 +26,6 @@ const ChatRoom = ({ you, notificationSent, setNotificationSent }) => {
     })
     
     // graphql mutations
-    const [newMessage] = useMutation(NEW_MESSAGE)
     const [notifyUser] = useMutation(NOTIFY_USER)
 
     // set content of chatroom on render
@@ -46,8 +44,7 @@ const ChatRoom = ({ you, notificationSent, setNotificationSent }) => {
             setFriend(data.getChatRoom.friend.userName)
             socket.emit("REQUEST_JOIN", (id))
         }
-        
-    
+         
     },[id, navigate, data, error, socket])
 
     
@@ -56,23 +53,14 @@ const ChatRoom = ({ you, notificationSent, setNotificationSent }) => {
 
         if(chatRoomMessages.length > 10 && autoScroll === true) {
             ref.current.lastChild.scrollIntoView();
-
         }
+
     
     },[chatRoomMessages.length, autoScroll])
 
     
-    // create a listener for submitting messages with Enter
     // create a toggle for the autoscroll event
     useEffect(() => {
-
-        const sendWithEnter = (e) => {
-
-            if(e.key === "Enter") {
-                document.getElementById("send-message").click()
-                refTwo.current.blur()
-            }
-        }
 
         const disableAutoScroll = (e) => {
 
@@ -88,67 +76,26 @@ const ChatRoom = ({ you, notificationSent, setNotificationSent }) => {
             }
         }
 
-        let textAreaInput = refTwo.current
         let scrollBarEvent = ref.current
         scrollBarEvent.addEventListener("wheel", disableAutoScroll)
-        textAreaInput.addEventListener("keypress", sendWithEnter)
 
         return () => {
-            textAreaInput.removeEventListener("keypress", sendWithEnter)
             scrollBarEvent.removeEventListener("wheel", disableAutoScroll)
         }
 
     },[autoScroll])
-
-
-    // handle user sending message
-    // prevent them from sending messages at the main page
-    const handleSentMessage = useCallback(async(message) => {
-
-        if(message.length < 1 || id === "1") {
-            setMessage("")
-            return;
-        }
-
-        const timestamp = Math.floor(Date.now()/1000)
-        const response = await newMessage({ variables: {
-            roomId: id,
-            sender: you,
-            body: message,
-            timestamp: timestamp
-        }})
-        
-        if(response) {
-            
-            const messageObj = {
-                sender: you,
-                body: message,
-                timestamp: timestamp
-            }
-    
-            setChatRoomMessages([...chatRoomMessages, messageObj])
-            setMessage("")
-            socket.emit("SEND_MESSAGE",({ id, friend, you, messageObj }))
-        }
-
-    },[id, socket, you, friend, chatRoomMessages, newMessage])
 
     
     // handle user receiving a message event
     const handleReceivedMessage = useCallback(({ messageObj }) => {
 
         setChatRoomMessages([...chatRoomMessages, messageObj])
-        setMessage("")
-
-        if(chatRoomMessages.length > 10 && autoScroll === true) {
-            ref.current.lastChild.scrollIntoView();
-        }
         
-    },[chatRoomMessages, autoScroll])
+    },[chatRoomMessages])
 
     
     // send friend a notification if they are offline
-    const handleOfflineMessage = useCallback( async () => {
+    const handleOfflineMessage = useCallback( async ({ messageObj }) => {
 
         if(notificationSent) {
             return;
@@ -162,7 +109,9 @@ const ChatRoom = ({ you, notificationSent, setNotificationSent }) => {
             setNotificationSent(true)
         }
         
-    },[friend, notificationSent, setNotificationSent, notifyUser])
+        setChatRoomMessages([...chatRoomMessages, messageObj])
+        
+    },[friend, notificationSent, setNotificationSent, notifyUser, chatRoomMessages])
 
 
     useEffect(() => {
@@ -178,20 +127,6 @@ const ChatRoom = ({ you, notificationSent, setNotificationSent }) => {
 
     },[handleReceivedMessage, handleOfflineMessage, socket])
 
-
-    const logoutClick = async () => {
-        
-        try {
-            const response = await axios.get("/api/logout")
-
-            if(response.status === 200) {
-                navigate("/")
-            }
-
-        } catch {
-            console.log("An error has occured.")
-        }
-    }
 
     // map messages to component elements
     const renderChatRoom = chatRoomMessages.map((details,index) => {
@@ -233,18 +168,13 @@ const ChatRoom = ({ you, notificationSent, setNotificationSent }) => {
               <p>Welcome</p>
               <p>{you}</p>
             </div>
-            <div className="header-logout">
-              <button className="header-logout__btn" onClick={() => logoutClick()}>Logout</button>
-            </div>
+            <LogoutButton navigate={navigate}/>
           </div>
           {autoScroll === false ? <p style={{ color: "white", display: "flex", justifyContent: "center"}}>Auto Scroll Disabled</p> : null}
           <div ref={ref} className="chat-room__content">
             {renderChatRoom.length > 0 ? renderChatRoom : null}
           </div>
-          <div className="message-enablers">
-            <textarea ref={refTwo} className="message-input" value={message} onChange={(e) => setMessage(e.target.value)} />
-            <button id="send-message" className="message-btn" onClick={() => handleSentMessage(message)}>Send</button>
-          </div>
+          <MessageMaker you={you} friend={friend} setChatRoomMessages={setChatRoomMessages}/>
         </div>
     )
 }

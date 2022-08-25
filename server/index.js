@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const passport = require("passport");
 const cookieSession = require("cookie-session");
-const keys = require("./config/dev");
+const keys = require("./config/keys");
 require("./models/ChatRoom");
 require("./models/User");
 require("./services/passport");
@@ -43,14 +43,6 @@ if(process.env.NODE_ENV === "production") {
     })
 }
 
-// to test if it will be deployed succesfully on a hosting website
-// it works
-/* app.use(express.static("./client/build"))
-
-const path = require("path");
-app.get("*", (req,res) => {
-    res.sendFile(path.resolve(__dirname, "./client","build","index.html"))
-}) */
 
 const setupGraphQl = async (graphServer, app, server) => {
     await graphServer.start()

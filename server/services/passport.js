@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const usernameGenerator = require("../user-utility/username-generator");
 const words = require("../user-utility/words-store");
-const keys = require("../config/dev");
+const keys = require("../config/keys");
 
 const User = mongoose.model("chatUsers");
 

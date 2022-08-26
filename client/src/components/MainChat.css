@@ -1,0 +1,465 @@
+
+.chat-page {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    z-index: 0;
+}
+
+.main-chat {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100vh;
+    min-height: 20em;
+    min-width: 41em;
+    border-radius: 0.5em;
+}
+
+.div-for-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 100vh;
+    border-radius: 0em 0em 0.5em 0.5em;
+    background-color: transparent;
+}
+
+
+/* Pending Friend Popup */
+
+.pending-list-toggle {
+    width: 100%;
+    height: auto;
+}
+
+.pending-list-toggle__btn {
+    width: 100%;
+    height: 4em;
+    background-color: #46b7c6;
+    border: 0.05em solid #363636;
+    font-size: 0.9em;
+    border-radius: 0.3em;
+}
+
+.pending-list-toggle__btn:hover {
+    cursor: pointer;
+    background-color: #86effd;
+}
+
+.pending-friend-list {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    background-color: white;
+    width: 100%;
+    height: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #46b7c6 #363636;
+}
+
+.pending-friend-list::-webkit-scrollbar {
+    width: 0.5em;
+    background-color: white;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #46b7c6;
+}
+
+.pending-item {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    border-bottom: 0.1em solid #363636;
+    height: 6.3em;
+    width: 100%;
+}
+
+.pending-btns {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    gap: 1em;
+}
+
+.pending-btn {
+    width: 8em;
+    height: 3em;
+}
+
+.pending-btn:nth-child(1) {
+    background-color: #46b7c6;
+}
+
+.pending-btn:nth-child(2) {
+    background-color: white;
+}
+
+.pending-btn:nth-child(1):hover {
+    background-color: #86effd;
+    cursor: pointer;
+}
+
+.pending-btn:nth-child(2):hover {
+    background-color: #b1b1b1;
+    cursor: pointer;
+}
+
+
+/* Friend List */
+
+.user-list {
+    position: relative;
+    top: 0;
+    left: 0;
+    min-width: 12em;
+    height: 100vh;
+    flex-basis: 14%;
+    border-right: 0.1em solid #808080;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #46b7c6 #ffffff; 
+    background-color: #363636;
+}
+
+.user-list::-webkit-scrollbar {
+    width: 0.5em;
+    background-color: white;
+}
+
+.user-list__header {
+    display: flex;
+    position: sticky;
+    flex-direction: column;
+    top: 0;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    height: auto;
+    font-size: 1.1em;
+    background-color: #ffffff;
+}
+
+.add-friend {
+    width: 100%;
+}
+
+.add-friend button {
+    width: 100%;
+    height: 3em;
+    font-size: 1.1em;
+    background-color: #46b7c6;
+    color: #363636;
+    border: 0.05em solid #363636;
+    border-radius: 0.2em;
+    font-family: 'Dosis', sans-serif;
+}
+
+.add-friend button:hover {
+    background-color: #86effd;
+    cursor: pointer;
+}
+
+.user-item {
+    display: flex;
+    justify-content: center;
+    gap: 2em;
+    font-size: 1.1em;
+    height: auto;
+    max-height: 5%;
+    background-color: #ffffff;
+    width: 100%;
+    border-bottom: 0.01em solid #363636;
+}
+
+.new-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.user-item:hover {
+    background-color: #b1b1b1;
+    cursor: pointer;
+}
+
+.chat-room {
+    min-width: 20em;
+    flex-basis: 86%;
+    position: relative;
+    background-color: #363636;
+}
+
+.chat-room__header {
+    display: flex;
+    position: sticky;
+    top: 0;
+    justify-content: space-between;
+    background-color: white;
+    width: 100%;
+    height: 4em;
+    border: 0.1em solid #808080;
+    box-shadow: 0em 0.1em 0.1em #808080;
+    font-size: 1.05em;
+}
+
+.friend-details {
+    display: flex;
+    flex-direction: column;
+    line-height: 0em;
+    margin-left: 0.2em;
+}
+
+.friend-username {
+    text-decoration: underline;
+    min-width: 10%;
+}
+
+.user-name {
+    line-height: 0.3em;
+    text-align: center;
+    background-color: #46b7c6;
+    height: 100%;
+    font-size: 1em;
+    min-width: 15%;
+    border: 0.05em solid #363636;
+    border-radius: 0em 0em 0.5em 0.5em;
+    box-shadow: 0em 0em 0.7em #363636;
+}
+
+.header-logout {
+    display: flex;
+    justify-content: flex-end;
+    width: 10%;
+    min-width: 5em;
+    height: 100%;
+}
+
+.header-logout__btn {
+    width: 7em;
+    height: 100%;
+    font-size: 1.1em;
+    background-color: #46b7c6;
+    color: #363636;
+    border: 0.1em solid #363636;
+    border-radius: 0em 0em 0em 1em;
+    font-family: 'Dosis', sans-serif;
+}
+
+.header-logout__btn:hover {
+    background-color: #86effd;
+    cursor: pointer;
+}
+
+.chat-room__content {
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #46b7c6 #363636; 
+    display: flex;
+    flex-direction: column;
+    height: 82%;
+}
+
+.chat-room__content::-webkit-scrollbar {
+    width: 0.5em;
+    background-color: #363636;
+}
+
+.chat-room__content .message-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-bottom: 1em;
+    width: 100%;
+}
+
+.chat-room__content .message-left {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 1em;
+    width: 100%;
+    margin-left: 0.5em;
+}
+
+.message-right .message-item {
+    background: linear-gradient(45deg, #46b7c6, #a2f0fb);
+}
+
+.message-left .message-item {
+    background-color: #ffffff;
+}
+
+.message-item {
+    line-height: 1em;
+    min-width: 7%;
+    width: auto;
+    max-width: 20em;
+    border-radius: 1em;
+    margin-top: 0.5em;
+    margin-right: 0.5em;
+}
+
+.message-item p.message-body {
+    word-wrap: break-word;
+    white-space: normal;
+    height: auto;
+    font-size: 1.1em;
+}
+
+.message-item p.message-time {
+    font-size: 0.8em;
+}
+
+.message-enablers {
+    display: flex;
+    gap: 1em;
+    position: fixed;
+    bottom: 0.5em;
+    width: 100%;
+    margin-left: 0.3em;
+}
+
+.message-input {
+    width: 50%;
+    max-width: 50%;
+    height: 3.2em;
+    font-size: 1.2em;
+    border-radius: 0.5em;
+    box-shadow: 0em 0.1em 0.1em #808080;
+    border: 0.2em solid #46b7c6;
+    overflow-wrap: break-word;
+    resize: none;
+    background-color: #dffafd;
+}
+
+.message-input:focus {
+    outline: none;
+    border: 0.3em solid #86effd;
+    background-color: #ffffff;
+    height: 3em;
+}
+
+.message-btn {
+    width: 12%;
+    min-width: 5em;
+    height: 3.2em;
+    background-color: #46b7c6;
+    color: #363636;
+    font-size: 1.2em;
+    border-radius: 0.5em;
+    border: 0.1em solid #808080;
+    font-family: 'Dosis', sans-serif;
+}
+
+.message-btn:hover {
+    transform: scale(1.05);
+    background-color: #86effd;
+    cursor: pointer;
+}
+
+
+/* modal css */
+.add-friend__modal-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 150;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: #80808055;
+}
+
+.add-friend__modal {
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    border: 0.2em solid #46b7c6;
+    justify-content: space-evenly;
+    align-items: center;
+    height: 28%;
+    width: 14%;
+    min-width: 15em;
+    min-height: 18em;
+    border-radius: 0.5em;
+}
+
+.add-friend__modal-title {
+    color: #363636;
+    font-size: 0.9em;
+    
+}
+
+.add-friend__modal-input {
+    display: flex;
+    justify-content: center;
+    width: 70%;
+    margin-bottom: 1em;
+    border-bottom: 0.2em solid #46b7c6;
+}
+
+.add-friend__modal-input input {
+    width: 100%;
+    height: 2.8em;
+    font-size: 1.2em;
+    outline: none;
+    position: relative;
+    border: none;
+    background: none;
+    color: #363636;
+}
+
+.add-friend__modal-btns {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 1em;
+    width: 70%;
+}
+
+.add-friend__modal-btn {
+    width: 100%;
+    
+}
+
+.add-friend__modal-btn button {
+    width: 100%;
+    min-width: 4em;
+    height: 4em;
+    background-color: #ffffff;
+    color: #363636;
+    font-size: 1.2em;
+    border-radius: 0.5em;
+    border: 0.1em solid #363636;
+    box-shadow: 0em 0.1em 0.2em #363636;
+    flex-basis: 45%;
+    font-family: 'Dosis', sans-serif;
+}
+
+.add-friend__modal-btn:nth-child(2) button:hover {
+    background-color: #363636;
+    color: #46b7c6;
+    border-color: #46b7c6;
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+.add-friend__modal-btn:nth-child(1) button:hover {
+    background-color: #46b7c6;
+    border-color: #363636;
+    color: #363636;
+    transform: scale(1.1);
+    cursor: pointer;
+}

@@ -10,3 +10,5 @@ Usernames currently are randomly generated in a similar way to Reddit,
 but with a poorer vocabulary as I only did some quick web scraping to grab
 some adjectives and nouns from a couple of websites. It also means that
 I don't have to moderate usernames.
+
+Live Demo at: https://stammak-chat.herokuapp.com/
